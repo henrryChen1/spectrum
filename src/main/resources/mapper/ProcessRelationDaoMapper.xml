@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.plkj.spectrum.dao.ProcessRelationDao">
+
+    <resultMap id="pr" type="com.plkj.spectrum.bean.ProcessRelation">
+        <result column="table_name" property="tableName"/>
+        <result column="store_procedure" property="storeProcedure"/>
+        <result column="comment" property="comment"/>
+        <result column="source_tables" property="sourceTables"/>
+        <result column="after_tables" property="afterTables"/>
+        <result column="map_json" property="mapJson"/>
+    </resultMap>
+
+
+    <select id="queryByFuzzyName" parameterType="String" resultType="java.lang.String">
+        select table_name
+        from process_relation
+        where table_name like #{tableName}
+    </select>
+
+    <select id="queryByTableName" parameterType="String" resultMap="pr">
+        select table_name,store_procedure,comment,source_tables,after_tables,map_json
+        from process_relation
+        where table_name = #{tableName}
+    </select>
+
+</mapper>
