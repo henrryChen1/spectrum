@@ -20,9 +20,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/*
+/**
 * Change the Excel to Data to insert into hive.
-*
+*  @Author cw
+ *  思路:1.读取excel 每一行  生成一个link.
+ *      2.
 * */
 public class QueryExecl {
     public static final String SAMPLE_XLSX_FILE_PATH = "/Users/chenwei/Code" +
@@ -30,9 +32,9 @@ public class QueryExecl {
 
     public static void main(String[] args) throws IOException, InvalidFormatException {
         List<ProcessRelation> processRelationList=excelRead();
-//        for(ProcessRelation processRelation:processRelationList){
-//            System.out.println(processRelation);
-//        }
+        for(ProcessRelation processRelation:processRelationList){
+            System.out.println(processRelation);
+        }
         System.out.println("总数组长度: "+processRelationList.size());
     }
     public static List<ProcessRelation> excelRead() throws IOException, InvalidFormatException {
@@ -52,8 +54,6 @@ public class QueryExecl {
                 Row row = rowIterator.next();
                 ProcessRelation processRelation = new ProcessRelation();
                 if (row.getCell(1) != null && row.getRowNum() != 0) {
-//                if (row.getCell(1) != null && row.getRowNum() != 0&&row.getRowNum()<3) {
-
                     String tableName = StringUtils.remove(StringUtils.remove(row.getCell(1).
                             getStringCellValue(), "\n"), "\r");
                     processRelation.setTableName(tableName);
@@ -85,15 +85,6 @@ public class QueryExecl {
             }
         }
         System.out.println("num: "+index);
-//        for (RelationObject RelationObject : list) {
-//            String tableName = RelationObject.getTableName();
-//            for (RelationObject relationObject1 : list) {
-//                if (relationObject1.getSourceTables().contains(
-//                        tableName)) {
-//                    RelationObject.getAfterTables().add(relationObject1.getTableName());
-//                }
-//            }
-//        }
         Map<String, List<String>> sourceTableRelation = new HashMap<>();
         Map<String, List<String>> afterTableRelation = new HashMap<>();
 
@@ -202,9 +193,9 @@ public class QueryExecl {
                     //如果不在 就需要添加link与data
                     Data data = null;
                     if (value == "来源表") {
-                        data = new Data(1, sourceTableName);
+//                        data = new Data(1, sourceTableName);
                     } else if (value == "影响表") {
-                        data = new Data(0, sourceTableName);
+//                        data = new Data(0, sourceTableName);
                     }
                     treeOfRelation.addData(data);
                     Link link = new Link();

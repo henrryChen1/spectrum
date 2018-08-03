@@ -1,22 +1,31 @@
 package com.plkj.spectrum.tool;
 
+import java.util.Arrays;
+
 public class Data {
-    private boolean draggable = true;
     private int category;
     private String name;
+    private String[] columns;
+    private String hierarchy;
+
+    public Data(int category, String name, String[] columns, String hierarchy) {
+        this.category = category;
+        this.name = name;
+        this.columns = columns;
+        this.hierarchy = hierarchy;
+    }
+
+    public Data() {
+    }
 
     @Override
     public String toString() {
         return "Data{" +
-                "draggable=" + draggable +
-                ", category=" + category +
+                "category=" + category +
                 ", name='" + name + '\'' +
+                ", columns=" + Arrays.toString(columns) +
+                ", hierarchy='" + hierarchy + '\'' +
                 '}';
-    }
-
-    public Data(int category, String name) {
-        this.category = category;
-        this.name = name;
     }
 
     public int getCategory() {
@@ -35,7 +44,19 @@ public class Data {
         this.name = name;
     }
 
-    public Data() {
+    public String[] getColumns() {
+        return columns;
     }
 
+    public void setColumns(String[] columns) {
+        this.columns = columns;
+    }
+
+    public String getHierarchy() {
+        return hierarchy;
+    }
+
+    public void setHierarchy(String hierarchy) {
+        this.hierarchy = hierarchy;
+    }
 }
