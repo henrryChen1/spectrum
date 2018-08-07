@@ -1,57 +1,46 @@
 package com.plkj.spectrum.tool;
 
-import org.apache.commons.lang.StringUtils;
+import java.util.List;
 
 public class Link {
-    private int source;
-    private int target;
-    private String value;
+    private String sourceTable;
+    private String targetTable;
+    private int value; //方向
     private String sourceColumn;
     private String targetColumn;
 
-    public Link(int source, int target, String value, String sourceColumn, String targetColumn) {
-        this.source = source;
-        this.target = target;
+    public Link() {
+    }
+
+    public Link(String source, String target, int value, String sourceColumn, String targetColumn) {
+        this.sourceTable = source;
+        this.targetTable = target;
         this.value = value;
         this.sourceColumn = sourceColumn;
         this.targetColumn = targetColumn;
     }
 
-    public Link() {
+    public String getSourceTable() {
+        return sourceTable;
     }
 
-    @Override
-    public String toString() {
-        return "Link{" +
-                "source=" + source +
-                ", target=" + target +
-                ", value='" + value + '\'' +
-                ", sourceColumn='" + sourceColumn + '\'' +
-                ", targetColumn='" + targetColumn + '\'' +
-                '}';
+    public void setSourceTable(String sourceTable) {
+        this.sourceTable = sourceTable;
     }
 
-    public int getSource() {
-        return source;
+    public String getTargetTable() {
+        return targetTable;
     }
 
-    public void setSource(int source) {
-        this.source = source;
+    public void setTargetTable(String targetTable) {
+        this.targetTable = targetTable;
     }
 
-    public int getTarget() {
-        return target;
-    }
-
-    public void setTarget(int target) {
-        this.target = target;
-    }
-
-    public String getValue() {
+    public int getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(int value) {
         this.value = value;
     }
 
@@ -69,5 +58,28 @@ public class Link {
 
     public void setTargetColumn(String targetColumn) {
         this.targetColumn = targetColumn;
+    }
+
+    @Override
+    public String toString() {
+        return "Link{" +
+                "sourceTable='" + sourceTable + '\'' +
+                ", targetTable='" + targetTable + '\'' +
+                ", value=" + value +
+                ", sourceColumn='" + sourceColumn + '\'' +
+                ", targetColumn='" + targetColumn + '\'' +
+                '}';
+    }
+
+    //将表名转化为坐标.
+    public void toJsonLink(List<Data> dataList){
+        for(Data data: dataList){
+            if(data.getName().equalsIgnoreCase(sourceTable)){
+                this.setSourceTable(String.valueOf(dataList.indexOf(data)));
+            }
+            if(data.getName().equalsIgnoreCase(targetColumn)){
+                this.setTargetTable(String.valueOf(dataList.indexOf(data)));
+            }
+        }
     }
 }

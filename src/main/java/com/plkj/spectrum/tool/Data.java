@@ -3,37 +3,22 @@ package com.plkj.spectrum.tool;
 import java.util.Arrays;
 
 public class Data {
-    private int category;
+    /**
+     * name:表名
+     * columns:列的数组
+     * hierarchy:这个表所在层.
+     */
     private String name;
     private String[] columns;
     private String hierarchy;
 
-    public Data(int category, String name, String[] columns, String hierarchy) {
-        this.category = category;
+    public Data(String name, String[] columns, String hierarchy) {
         this.name = name;
         this.columns = columns;
         this.hierarchy = hierarchy;
     }
 
     public Data() {
-    }
-
-    @Override
-    public String toString() {
-        return "Data{" +
-                "category=" + category +
-                ", name='" + name + '\'' +
-                ", columns=" + Arrays.toString(columns) +
-                ", hierarchy='" + hierarchy + '\'' +
-                '}';
-    }
-
-    public int getCategory() {
-        return category;
-    }
-
-    public void setCategory(int category) {
-        this.category = category;
     }
 
     public String getName() {
@@ -59,4 +44,14 @@ public class Data {
     public void setHierarchy(String hierarchy) {
         this.hierarchy = hierarchy;
     }
+
+    @Override
+    public String toString() {
+        return "Data{" +
+                "name='" + name + '\'' +
+                ", columns=" + Arrays.toString(columns) +
+                ", hierarchy='" + hierarchy + '\'' +
+                '}';
+    }
 }
+

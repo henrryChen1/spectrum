@@ -58,12 +58,6 @@ public class TreeOfRelation {
         return tableNames;
     }
 
-    public void init(String tableName) {
-        Data data = new Data();
-        data.setName(tableName);
-        data.setCategory(-1);
-        addData(data);
-    }
 
     public String getRelyTableNames() {
         List<String> names = new ArrayList<>();
@@ -73,20 +67,30 @@ public class TreeOfRelation {
         return names.toString();
     }
 
+    //判断一个表是否需要需要进入递归操作
     public boolean checkTableIsRecursive(String tableName) {
-        int index = -9999;
         //找到是否有相同表名的data(已经被存入)
         for (Data data : Datas) {
             if (data.getName() == tableName || data.getName().equalsIgnoreCase(tableName)) {
-                index = Datas.indexOf(data);
+                return false;
             }
         }
-        //寻找是否有关于他自己的source
+        //寻找是否有关于他自己的source/防止死循环
         for (Link link : Links) {
-            if (link.getSource() - index == 0) {
+            if (link.getSourceTable() == tableName) {
                 return false;
             }
         }
         return true;
     }
+
+    public boolean containTable(String tableName) {
+        for (Data data : Datas) {
+            if (data.getName() == tableName || data.getName().equalsIgnoreCase(tableName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
