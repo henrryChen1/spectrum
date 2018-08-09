@@ -2,151 +2,88 @@ package com.plkj.spectrum.tool;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import org.apache.avro.data.Json;
+import com.plkj.spectrum.bean.ProcessRelation;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class JsonTool {
-    public static JSONObject init() {
+    public static JSONObject buildJson(TreeOfRelation afterTree, TreeOfRelation sourceTree) {
+        //fix
+        List<Node> nodeList = new ArrayList<>();
+        List<Link> linkList  = new ArrayList<>();
+        nodeList.addAll(afterTree.getNodes());
+        sourceTree.getNodes().remove(0);
+        nodeList.addAll(sourceTree.getNodes());
+        if(afterTree.getLinks()!=null) {
+            for (Link link : afterTree.getLinks()) {
+                for (Node node : nodeList) {
+                    if (link.getSouceTable() == node.getName()) {
+                        link.setSource(nodeList.indexOf(node));
+                    }
+                    if (link.getTargetTable() == node.getName()) {
+                        link.setTarget(nodeList.indexOf(node));
+                    }
+                }
+                linkList.add(link);
+            }
+        }
+        if(sourceTree.getLinks()!=null) {
+            for (Link link : sourceTree.getLinks()) {
+                for (Node node : nodeList) {
+                    if (link.getSouceTable() == node.getName()) {
+                        link.setSource(nodeList.indexOf(node));
+                    }
+                    if (link.getTargetTable() == node.getName()) {
+                        link.setTarget(nodeList.indexOf(node));
+                    }
+                }
+                linkList.add(link);
+            }
+        }
+        JSONArray nodeArray = new JSONArray();
+        nodeArray.addAll(nodeList);
+        JSONArray linkArray = new JSONArray();
+        linkArray.addAll(linkList);
+
         JSONObject jsonObject = new JSONObject();
-        JSONObject title = new JSONObject();
-        JSONObject tooltip = new JSONObject();
-        JSONObject label = new JSONObject();
-        JSONObject normal = new JSONObject();
-        JSONObject textstyle = new JSONObject();
-
-
-        title.put("text", "");
-        jsonObject.put("title", title);
-        jsonObject.put("tooltip", tooltip);
-        jsonObject.put("animationDurationUpdate", 1500);
-        jsonObject.put("animationEasingUpdate", "quinticInOut");
-        normal.put("show", true);
-        textstyle.put("fontSize", 12);
-        normal.put("textStyle", textstyle);
-        label.put("normal", normal);
-        jsonObject.put("label", label);
+        jsonObject.put("Links",linkArray);
+        jsonObject.put("Datas",nodeArray);
 
         return jsonObject;
     }
-
-    public static JSONObject buildJson(TreeOfRelation afterTree, TreeOfRelation sourceTree) {
-        JSONObject jsonObject = JsonTool.init();
-        JSONArray data = new JSONArray();
-        JSONObject distinctdata = new JSONObject();
-        JSONArray links = new JSONArray();
-        JSONArray series = new JSONArray();
-        JSONObject serie = new JSONObject();
-        JSONArray categories = new JSONArray();
-        JSONObject categorie = new JSONObject();
-        JSONObject itemStyle = new JSONObject();
-        JSONObject force = new JSONObject();
-        JSONObject edgeLabel = new JSONObject();
-
-        JSONObject linkStyle = new JSONObject();
-        //获得对象数据
-        List<Data> afterNodes = afterTree.getDatas();
-        List<Data> sourceNodes = sourceTree.getDatas();
-        List<Link> afterLinks = afterTree.getLinks();
-        List<Link> sourceLinks = sourceTree.getLinks();
-        //
-        distinctdata.put("name", sourceNodes.get(0).getName());
-        distinctdata.put("draggable", true);
-        data.add(distinctdata);
-        //把对象表从对应的数组中删除
-        afterNodes.remove(0);
-        sourceNodes.remove(0);
-
-        for (Data node : sourceNodes) {
-
-            distinctdata = new JSONObject();
-            distinctdata.put("name", node.getName());
-            distinctdata.put("draggable", true);
-            distinctdata.put("category", node.getCategory());
-            data.add(distinctdata);
+    public static String dealString(String str) {
+        if (str == null) {
+            return "";
         }
-        for (Data node : afterNodes) {
-            distinctdata = new JSONObject();
-            distinctdata.put("name", node.getName());
-            distinctdata.put("draggable", true);
-            distinctdata.put("category", node.getCategory());
-            data.add(distinctdata);
-        }
+        return str.replaceAll("\n", "").replaceAll(",", ";");
 
-        serie.put("type", "graph");
-        serie.put("layout", "force");
-        serie.put("symbolSize", 45);
-        serie.put("focusNodeAdjacency", false);
-        serie.put("draggable", false);
-        //categories
-        categorie.put("name", "父级节点");
-        JSONObject normal = new JSONObject();
-        normal.put("color", "#009800");
-        itemStyle.put("normal", normal);
-        categorie.put("itemStyle", itemStyle);
-        categories.add(categorie);
-        categorie = new JSONObject();
-        normal = new JSONObject();
-        itemStyle = new JSONObject();
-        normal.put("color", "#4592FF");
-        itemStyle.put("normal", normal);
-        categorie.put("itemStyle", itemStyle);
-        categorie.put("name", "子集节点");
-        categories.add(categorie);
-        serie.put("categories", categories);
-        normal = new JSONObject();
-        JSONObject label = new JSONObject();
-        JSONObject textstyle = new JSONObject();
-        textstyle.put("fontSize", 12);
-        normal.put("show", true);
-        normal.put("textStyle", textstyle);
-        label.put("normal", normal);
-        serie.put("label", label);
-        force.put("repulsion", 1000);
-        serie.put("force", force);
-        serie.put("edgeSymbolSize", new int[]{4, 50});
-        textstyle = new JSONObject();
-        normal = new JSONObject();
-        textstyle.put("fontSize", 10);
-        normal.put("show", true);
-        normal.put("textStyle", textstyle);
-        normal.put("formatter", "{c}");
-        edgeLabel.put("normal", normal);
-        serie.put("edgeLabel", edgeLabel);
-        normal = new JSONObject();
-        normal.put("opacity", 0.9);
-        normal.put("width", 1);
-        normal.put("curveness", 0);
-        linkStyle.put("normal", normal);
-        serie.put("lineStyle", linkStyle);
-        serie.put("Data", data);
-
-        //数组合并 节点坐标需要相加.
-        int sourceNum = sourceLinks.size() - 1;
-        for (Link link : sourceLinks) {
-            JSONObject linkJson = new JSONObject();
-            linkJson.put("source", link.getSource());
-            linkJson.put("target", link.getValue());
-            linkJson.put("value", link.getValue());
-            links.add(link);
+    }
+    public static String revertString(String str) {
+        if (str == null) {
+            return "";
         }
-        for (Link link : afterLinks) {
-            JSONObject linkJson = new JSONObject();
-            if (link.getSource() != 0) {
-                link.setSource(link.getSource() + sourceNum - 1);
-            }
-            if (link.getTarget() != 0) {
-                link.setTarget(link.getTarget() + sourceNum - 1);
-            }
-            linkJson.put("source", link.getSource());
-            linkJson.put("target", link.getValue());
-            linkJson.put("value", link.getValue());
-            links.add(link);
-        }
+        return str.replaceAll("'", "\"").replaceAll(";", ",");
 
-        serie.put("links", links);
-        series.add(serie);
-        jsonObject.put("series", series);
-        return jsonObject;
+    }
+    public  static  JSONObject getJson(ProcessRelation relation){
+        if (relation != null) {
+            relation.setAfterTables(JsonTool.revertString(relation.getAfterTables()));
+            relation.setMapJson(JsonTool.revertString(relation.getMapJson()));
+            relation.setSourceTables(JsonTool.revertString(relation.getSourceTables()));
+            relation.setColumns(JsonTool.revertString(relation.getSourceTables()));
+            relation.setComment(JsonTool.revertString(relation.getComment()));
+        }
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("tableName",relation.getTableName());
+        jsonObject.put("storeProcedure",relation.getStoreProcedure());
+        jsonObject.put("comment",relation.getComment());
+        jsonObject.put("columns",JSONArray.parse(relation.getColumns()));
+        jsonObject.put("sourceTables",JSONArray.parse(relation.getSourceTables()));
+        jsonObject.put("afterTables",JSONArray.parse(relation.getAfterTables()));
+        jsonObject.put("mapJson",JSONObject.parseObject(relation.getMapJson()));
+        return  jsonObject;
     }
 }

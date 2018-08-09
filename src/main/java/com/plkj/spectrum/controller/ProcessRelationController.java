@@ -1,5 +1,6 @@
 package com.plkj.spectrum.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.plkj.spectrum.bean.ProcessRelation;
 import com.plkj.spectrum.service.ProcessRelationService;
@@ -25,14 +26,13 @@ public class ProcessRelationController {
 
     //根据表名进行模糊查询 返回List
     @RequestMapping("/fuzzyQuery")
-    public List<String> fuzzyQuery(String tableName, HttpServletResponse response) {
+    public JSONArray fuzzyQuery(String tableName, HttpServletResponse response) {
         response.addHeader("Access-Control-Allow-Origin", "http://localhost:8020");
-        System.out.println(tableName);
         return service.queryByFuzzyName(tableName);
     }
     //根据指定的表返回详细信息
     @RequestMapping("/relationQuery")
-    public ProcessRelation relationQuery(String tableName, HttpServletResponse response){
+    public JSONObject relationQuery(String tableName, HttpServletResponse response){
         response.addHeader("Access-Control-Allow-Origin", "http://localhost:8020");
 
         return  service.queryByName(tableName);

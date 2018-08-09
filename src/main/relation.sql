@@ -2,12 +2,19 @@ Create table process_relation (
 table_name       string,
 store_procedure     string,
 comment           string,
+columns           string,
 source_tables     string,
 after_tables      string,
 map_json           string
 )
 
-
+--    private String tableName;
+--    private String storeProcedure;
+--    private String comment;
+--    private List<String> columns;
+--    private String sourceTables;
+--    private String afterTables;
+--    private String mapJson;
 set hive.strict.checks.cartesian.product=false;
 set hive.mapred.mode = nonstrict;
 --精确查询获得关系图的查询使用.

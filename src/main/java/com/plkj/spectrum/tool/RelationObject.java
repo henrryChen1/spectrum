@@ -45,6 +45,8 @@ public class RelationObject {
     }
 
     public RelationObject() {
+        this.sourceTables=new ArrayList<>();
+        this.afterTables=new ArrayList<>();
     }
 
     @Override
@@ -55,4 +57,5 @@ public class RelationObject {
                 ", afterTables=" + afterTables +
                 '}';
     }
+
 }

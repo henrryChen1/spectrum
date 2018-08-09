@@ -1,6 +1,7 @@
 package com.plkj.spectrum.bean;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProcessRelation implements Serializable {
@@ -8,23 +9,49 @@ public class ProcessRelation implements Serializable {
     private String tableName;
     private String storeProcedure;
     private String comment;
+    private String columns;
     private String sourceTables;
     private String afterTables;
     private String mapJson;
 
-    public ProcessRelation(  ) {
+
+    public ProcessRelation() {
         init();
     }
-    public  void init(){
+
+    public void init() {
         this.tableName = "";
         this.storeProcedure = "";
         this.comment = "";
         this.sourceTables = "";
         this.afterTables = "";
         this.mapJson = "";
+        this.columns = "";
     }
 
-    public ProcessRelation(String tableName, String storeProcedure, String comment, String sourceTables, String afterTables, String mapJson) {
+    @Override
+    public String toString() {
+        return "ProcessRelation{" +
+                "tableName='" + tableName + '\'' +
+                ", storeProcedure='" + storeProcedure + '\'' +
+                ", comment='" + comment + '\'' +
+                ", sourceTables='" + sourceTables + '\'' +
+                ", afterTables='" + afterTables + '\'' +
+                ", mapJson='" + mapJson + '\'' +
+                ", columns=" + columns +
+                '}';
+    }
+
+    public String getColumns() {
+        return columns;
+    }
+
+    public void setColumns(String columns) {
+        this.columns = columns;
+    }
+
+    public ProcessRelation(String tableName, String storeProcedure, String comment, String sourceTables,
+                           String afterTables, String mapJson, String columns) {
         init();
         this.tableName = tableName;
         this.storeProcedure = storeProcedure;
@@ -32,6 +59,9 @@ public class ProcessRelation implements Serializable {
         this.sourceTables = sourceTables;
         this.afterTables = afterTables;
         this.mapJson = mapJson;
+        this.columns = columns;
+
+
     }
 
     public static long getSerialVersionUID() {
@@ -87,15 +117,4 @@ public class ProcessRelation implements Serializable {
     }
 
 
-    @Override
-    public String toString() {
-        return "ProcessRelation{" +
-                "tableName='" + tableName + '\'' +
-                ", storeProcedure='" + storeProcedure + '\'' +
-                ", comment='" + comment + '\'' +
-                ", sourceTables='" + sourceTables + '\'' +
-                ", afterTables='" + afterTables + '\'' +
-                ", mapJson='" + mapJson + '\'' +
-                '}';
-    }
 }

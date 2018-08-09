@@ -6,20 +6,24 @@
         <result column="table_name" property="tableName"/>
         <result column="store_procedure" property="storeProcedure"/>
         <result column="comment" property="comment"/>
+        <result column="columns" property="columns"/>
         <result column="source_tables" property="sourceTables"/>
         <result column="after_tables" property="afterTables"/>
         <result column="map_json" property="mapJson"/>
     </resultMap>
+    <resultMap id="fuzzy" type="HashMap">
+        <result property="key" column="table_name"/>
+        <result property="value" column="columns"/>
+    </resultMap>
 
-
-    <select id="queryByFuzzyName" parameterType="String" resultType="java.lang.String">
-        select table_name
+    <select id="queryByFuzzyName" parameterType="String" resultType="java.util.HashMap">
+        select table_name,columns
         from process_relation
         where table_name like #{tableName}
     </select>
 
     <select id="queryByTableName" parameterType="String" resultMap="pr">
-        select table_name,store_procedure,comment,source_tables,after_tables,map_json
+        select table_name,store_procedure,comment,columns,source_tables,after_tables,map_json
         from process_relation
         where table_name = #{tableName}
     </select>

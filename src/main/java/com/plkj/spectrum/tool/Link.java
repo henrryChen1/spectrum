@@ -1,17 +1,32 @@
 package com.plkj.spectrum.tool;
 
+import java.util.List;
+
 public class Link {
     private int source;
     private int target;
-    private String value;
+    private int value;
+    private String souceTable;
+    private String targetTable;
 
-    public Link(int source, int target, String value) {
-        this.source = source;
-        this.target = target;
+    public Link(int value, String souceTable, String targetTable) {
         this.value = value;
+        this.souceTable = souceTable;
+        this.targetTable = targetTable;
     }
 
-    public Link(    ) {
+    public Link() {
+    }
+
+    @Override
+    public String toString() {
+        return "Link{" +
+                "source=" + source +
+                ", target=" + target +
+                ", value='" + value + '\'' +
+                ", souceTable='" + souceTable + '\'' +
+                ", targetTable='" + targetTable + '\'' +
+                '}';
     }
 
     public int getSource() {
@@ -30,20 +45,46 @@ public class Link {
         this.target = target;
     }
 
-    public String getValue() {
+    public int getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(int value) {
         this.value = value;
     }
 
-    @Override
-    public String toString() {
-        return "Link{" +
-                "source=" + source +
-                ", target=" + target +
-                ", value='" + value + '\'' +
-                '}';
+    public String getSouceTable() {
+        return souceTable;
+    }
+
+    public void setSouceTable(String souceTable) {
+        this.souceTable = souceTable;
+    }
+
+    public String getTargetTable() {
+        return targetTable;
+    }
+
+    public void setTargetTable(String targetTable) {
+        this.targetTable = targetTable;
+    }
+
+    public void setSource(List<Node> nodeList){
+        for(Node node:nodeList){
+            if(node.getName().equalsIgnoreCase(this.souceTable)){
+                this.setSource(nodeList.indexOf(node));
+                return;
+            }
+        }
+    }
+
+
+    public void setTarget(List<Node> nodeList){
+        for(Node node:nodeList){
+            if(node.getName().equalsIgnoreCase(this.targetTable)){
+                this.setTarget(nodeList.indexOf(node));
+                return;
+            }
+        }
     }
 }
