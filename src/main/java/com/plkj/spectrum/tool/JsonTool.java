@@ -73,7 +73,8 @@ public class JsonTool {
             relation.setAfterTables(JsonTool.revertString(relation.getAfterTables()));
             relation.setMapJson(JsonTool.revertString(relation.getMapJson()));
             relation.setSourceTables(JsonTool.revertString(relation.getSourceTables()));
-            relation.setColumns(JsonTool.revertString(relation.getSourceTables()));
+            relation.setAfterTables(JsonTool.revertString(relation.getAfterTables()));
+            relation.setColumns(JsonTool.revertString(relation.getColumns()));
             relation.setComment(JsonTool.revertString(relation.getComment()));
         }
         JSONObject jsonObject = new JSONObject();

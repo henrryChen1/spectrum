@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Node {
     private String name;
-    private List<String> colums;
+    private List<Column> colums;
 //    private String comment;
 //    private String hierarchy;
     private String comment;
@@ -20,7 +20,7 @@ public class Node {
         this.comment = comment;
     }
 
-    public Node(String name, List<String> colums, String comment) {
+    public Node(String name, List<Column> colums, String comment) {
 
         this.name = name;
         this.colums = colums;
@@ -38,16 +38,16 @@ public class Node {
         this.name = name;
     }
 
-    public List<String> getColums() {
+    public List<Column> getColums() {
         return colums;
     }
 
-    public void setColums(List<String> colums) {
+    public void setColums(List<Column> colums) {
         this.colums = colums;
     }
 
 
-    public  void addColumns(String column){
+    public  void addColumn(Column column){
         if(this.colums==null){
             setColums(new ArrayList<>());
         }
@@ -72,11 +72,18 @@ public class Node {
         this.storeProcedure = storeProcedure;
     }
 
-    public Node(String name, List<String> colums, String comment, String storeProcedure) {
+    public Node(String name, List<Column> colums, String comment, String storeProcedure) {
 
         this.name = name;
         this.colums = colums;
         this.comment = comment;
         this.storeProcedure = storeProcedure;
+    }
+    public List<String> buildcolumnsName(){
+        List<String> columnList = new ArrayList<>();
+        for (Column column:colums){
+            columnList.add(column.getName());
+        }
+        return  columnList;
     }
 }

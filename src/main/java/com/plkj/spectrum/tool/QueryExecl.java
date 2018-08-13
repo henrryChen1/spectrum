@@ -65,9 +65,13 @@ public class QueryExecl {
                     String targetName = StringUtils.trim(sheet.getRow(cr.getFirstRow()).
                             getCell(cr.getFirstColumn()).getStringCellValue()).toUpperCase();
                     while (rowIndex <= lastRow) {
-                        if (StringUtils.isNotBlank(sheet.getRow(rowIndex).getCell(cell).getStringCellValue())) {
-                            node.addColumns(StringUtils.trim(sheet.getRow(rowIndex).getCell(cell).getStringCellValue())
-                                    .toUpperCase());
+                        if (sheet.getRow(rowIndex).getCell(cell)!=null&&
+                                StringUtils.isNotBlank(sheet.getRow(rowIndex).getCell(cell).toString())) {
+                             String name = StringUtils.trim(sheet.getRow(rowIndex).getCell(cell).getStringCellValue())
+                                     .toUpperCase();
+                            String comment = StringUtils.trim(sheet.getRow(rowIndex).getCell(cell+1).getStringCellValue())
+                                   .toUpperCase();
+                            node.addColumn(new Column(name,comment));
                         }
                         String sourceName = StringUtils.trim(sheet.getRow(rowIndex).getCell(5).getStringCellValue()).
                                 toUpperCase();
@@ -86,9 +90,9 @@ public class QueryExecl {
                         for (int i = 0; i < nodeList.size(); i++) {
                             Node existNode = nodeList.get(i);
                             if (existNode.getName().equalsIgnoreCase(node.getName())) {
-                                for (String column : node.getColums()) {
+                                for (Column column : node.getColums()) {
                                     if (!existNode.getColums().contains(column)) {
-                                        existNode.addColumns(column);
+                                        existNode.addColumn(column);
                                     }
                                 }
                             } else if (i == nodeList.size() - 1) {
@@ -123,7 +127,7 @@ public class QueryExecl {
             processRelation.setComment(node.getComment());
 
             JSONArray columns = new JSONArray();
-            columns.addAll(node.getColums());
+            columns.addAll(node.buildcolumnsName());
             JSONArray soucreTables = new JSONArray();
             soucreTables.addAll(sourceTable.getTableName());
             JSONArray afterTables = new JSONArray();
@@ -187,66 +191,61 @@ public class QueryExecl {
         return treeOfRelation;
     }
 
-    /**
-     * parse if name .equals DW_SAVING_CARD_INFO（t1)
-     * DW_CARD_INFO  (t2)
-     * 需要做一次匹配.
-     */
-    public static Collection<Node> parseNode(Node node) {
-        Map<String, Node> nameMap = new HashMap<>();
-        List<Node> nodeList = new ArrayList<>();
-        String nm = node.getName().replace("（", "(").replace("\r", "").
-                replace("）", ")");
-        String[] names = nm.split("\n");
-        for (String name : names) {
-            String n = StringUtils.trim(name.split("\\(")[0]);
-            String t = StringUtils.trim(name.split("\\(")[1].split("\\)")[0]);
-            Node newNode = new Node();
-            newNode.setName(n);
-            nameMap.put(t, newNode);
-        }
-        if (StringUtils.isNotBlank(node.getComment())) {
-            String ct = node.getComment().replace("（", "(").replace("\r", "").
-                    replace("）", ")");
-            String[] comments = ct.split("\n");
-            for (String comment : comments) {
-                String value = StringUtils.trim(comment.split("\\(")[0]);
-                String id = StringUtils.trim(comment.split("\\(")[1].split("\\)")[0]);
-                for (String key : nameMap.keySet()) {
-                    if (id.equalsIgnoreCase(key)) {
-                        nameMap.get(id).setComment(value);
-                    }
-                }
-            }
-        }
-        if (node.getColums() != null) {
-            for (String colums : node.getColums()) {
-                String value = StringUtils.trim(colums.split("\\(")[0]);
-                String id = StringUtils.trim(colums.split("\\(")[1].split("\\)")[0]);
-                for (String key : nameMap.keySet()) {
-                    if (id.contains(key)) {
-                        nameMap.get(key).addColumns(value);
-                    }
-                }
-            }
-        }
-
-        return nameMap.values();
-    }
+//    /**
+//     * parse if name .equals DW_SAVING_CARD_INFO（t1)
+//     * DW_CARD_INFO  (t2)
+//     * 需要做一次匹配.
+//     */
+//    public static Collection<Node> parseNode(Node node) {
+//        Map<String, Node> nameMap = new HashMap<>();
+//        List<Node> nodeList = new ArrayList<>();
+//        String nm = node.getName().replace("（", "(").replace("\r", "").
+//                replace("）", ")");
+//        String[] names = nm.split("\n");
+//        for (String name : names) {
+//            String n = StringUtils.trim(name.split("\\(")[0]);
+//            String t = StringUtils.trim(name.split("\\(")[1].split("\\)")[0]);
+//            Node newNode = new Node();
+//            newNode.setName(n);
+//            nameMap.put(t, newNode);
+//        }
+//        if (StringUtils.isNotBlank(node.getComment())) {
+//            String ct = node.getComment().replace("（", "(").replace("\r", "").
+//                    replace("）", ")");
+//            String[] comments = ct.split("\n");
+//            for (String comment : comments) {
+//                String value = StringUtils.trim(comment.split("\\(")[0]);
+//                String id = StringUtils.trim(comment.split("\\(")[1].split("\\)")[0]);
+//                for (String key : nameMap.keySet()) {
+//                    if (id.equalsIgnoreCase(key)) {
+//                        nameMap.get(id).setComment(value);
+//                    }
+//                }
+//            }
+//        }
+//        if (node.getColums() != null) {
+//            for (Column colum : node.getColums()) {
+//                String name =  colum.getName();
+//                String value = StringUtils.trim(name.split("\\(")[0]);
+//                String id = StringUtils.trim(name.split("\\(")[1].split("\\)")[0]);
+//                String comment = colum.getComment();
+//                for (String key : nameMap.keySet()) {
+//                    if (id.contains(key)) {
+//                        nameMap.get(key).addColumns(value);
+//                    }
+//                }
+//            }
+//        }
+//
+//        return nameMap.values();
+//    }
 
 
     public static void paseResult(List<Node> nodeList, List<Link> linkList) {
         Map<Node, Collection<Node>> replaceMap = new HashMap<>();
         String targetName = "";
-        for (Node node : nodeList) {
-            if (node.getName().contains("\n")) {
-                Collection<Node> nodeList1 = parseNode(node);
-                replaceMap.put(node, nodeList1);
-            }
-        }
         for (Node node : replaceMap.keySet()) {
             nodeList.remove(node);
-
             Collection<Node> nodeCollection = replaceMap.get(node);
             for (int i = 0; i < linkList.size(); i++) {
                 if (linkList.get(i).getSouceTable().equalsIgnoreCase(node.getName())) {
@@ -254,16 +253,15 @@ public class QueryExecl {
                     linkList.remove(i);
                 }
             }
-
             for (Node newNode : nodeCollection) {
                 //NodeList
                 if (nodeList.size() > 0) {
                     for (int i = 0; i < nodeList.size(); i++) {
                         Node existNode = nodeList.get(i);
                         if (existNode.getName().equalsIgnoreCase(newNode.getName())) {
-                            for (String column : newNode.getColums()) {
+                            for (Column column : newNode.getColums()) {
                                 if (!existNode.getColums().contains(column)) {
-                                    existNode.addColumns(column);
+                                    existNode.addColumn(column);
                                 }
                             }
                         } else if (i == nodeList.size() - 1) {
