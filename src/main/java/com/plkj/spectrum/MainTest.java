@@ -2,6 +2,7 @@ package com.plkj.spectrum;
 
 import com.alibaba.fastjson.JSONArray;
 import com.plkj.spectrum.bean.ProcessRelation;
+import com.plkj.spectrum.bean.SourceDataNode;
 import com.plkj.spectrum.tool.JsonTool;
 import org.apache.commons.lang.StringUtils;
 import com.plkj.spectrum.tool.QueryExecl;
@@ -52,6 +53,32 @@ public class MainTest {
                     .append("\"" + JsonTool.dealString(processRelation.getAfterTables()) + "\",")
                     .append("\"" + JsonTool.dealString(processRelation.getMapJson()) + "\")");
             if (i < processRelationList.size() - 1) {
+                sql.append(",");
+            }
+
+        }
+        String executeSql = sql.toString().replaceAll("\\\\n", "");
+        hiveJdbcTemplate.execute(executeSql);
+
+    }
+    @Test
+    public void insertSourceDataTest() throws IOException, InvalidFormatException {
+        StringBuffer sql = new StringBuffer("insert into SOURCE_DATA_NODE values ");
+        List<SourceDataNode> sourceDataNodeList = QueryExecl.getInitData();
+
+// 拼接 并且插入数据库.d
+        for (int i = 0; i < sourceDataNodeList.size(); i++) {
+            SourceDataNode sourceDataNode = sourceDataNodeList.get(i);
+            sql.append("(\"" + JsonTool.dealString(sourceDataNode.getTargetTableName()) + "\",")
+                    .append("\"" + JsonTool.dealString(sourceDataNode.getTargetTableComment()) + "\",")
+                    .append("\"" + JsonTool.dealString(sourceDataNode.getTargetColumnName()) + "\",")
+                    .append("\"" + JsonTool.dealString(sourceDataNode.getTargetColumnComment()) + "\",")
+                    .append("\"" + JsonTool.dealString(sourceDataNode.getSourceTableName()) + "\",")
+                    .append("\"" + JsonTool.dealString(sourceDataNode.getSourceTableComment()) + "\",")
+                    .append("\"" + JsonTool.dealString(sourceDataNode.getSourceColumnName()) + "\",")
+                    .append("\"" + JsonTool.dealString(sourceDataNode.getSourceColumnComment()) + "\",")
+                    .append("\"" + JsonTool.dealString(sourceDataNode.getStoreProcedure()) + "\")");
+            if (i < sourceDataNodeList.size() - 1) {
                 sql.append(",");
             }
 

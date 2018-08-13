@@ -231,7 +231,7 @@ public class QueryExecl {
         }
     }
 
-    public List<SourceDataNode> getInitData() throws IOException, InvalidFormatException {
+    public  static List<SourceDataNode> getInitData() throws IOException, InvalidFormatException {
         // Creating a Workbook from an Excel file (.xls or .xlsx)
         Workbook workbook = WorkbookFactory.create(new File(SAMPLE_XLSX_FILE_PATH));
 
