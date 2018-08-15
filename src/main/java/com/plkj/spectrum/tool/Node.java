@@ -7,8 +7,6 @@ import java.util.List;
 public class Node {
     private String name;
     private List<Column> colums;
-//    private String comment;
-//    private String hierarchy;
     private String comment;
     private String storeProcedure;
 
@@ -51,6 +49,9 @@ public class Node {
         if(this.colums==null){
             setColums(new ArrayList<>());
         }
+        if(this.colums.contains(column)){
+            return;
+        }
         this.colums.add(column);
     }
 
@@ -86,4 +87,5 @@ public class Node {
         }
         return  columnList;
     }
+
 }

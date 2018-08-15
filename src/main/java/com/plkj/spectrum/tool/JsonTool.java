@@ -13,30 +13,32 @@ public class JsonTool {
     public static JSONObject buildJson(TreeOfRelation afterTree, TreeOfRelation sourceTree) {
         //fix
         List<Node> nodeList = new ArrayList<>();
-        List<Link> linkList  = new ArrayList<>();
+        List<Link> linkList = new ArrayList<>();
         nodeList.addAll(afterTree.getNodes());
-        sourceTree.getNodes().remove(0);
+        if ((sourceTree.getNodes().size()) != 0) {
+            sourceTree.getNodes().remove(0);
+        }
         nodeList.addAll(sourceTree.getNodes());
-        if(afterTree.getLinks()!=null) {
+        if (afterTree.getLinks() != null) {
             for (Link link : afterTree.getLinks()) {
                 for (Node node : nodeList) {
-                    if (link.getSouceTable() == node.getName()) {
+                    if (link.getSouceTable().equalsIgnoreCase(node.getName())) {
                         link.setSource(nodeList.indexOf(node));
                     }
-                    if (link.getTargetTable() == node.getName()) {
+                    if (link.getTargetTable().equalsIgnoreCase(node.getName())) {
                         link.setTarget(nodeList.indexOf(node));
                     }
                 }
                 linkList.add(link);
             }
         }
-        if(sourceTree.getLinks()!=null) {
+        if (sourceTree.getLinks() != null) {
             for (Link link : sourceTree.getLinks()) {
                 for (Node node : nodeList) {
-                    if (link.getSouceTable() == node.getName()) {
+                    if (link.getSouceTable().equalsIgnoreCase(node.getName())) {
                         link.setSource(nodeList.indexOf(node));
                     }
-                    if (link.getTargetTable() == node.getName()) {
+                    if (link.getTargetTable().equalsIgnoreCase(node.getName())) {
                         link.setTarget(nodeList.indexOf(node));
                     }
                 }
@@ -49,11 +51,12 @@ public class JsonTool {
         linkArray.addAll(linkList);
 
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("Links",linkArray);
-        jsonObject.put("Datas",nodeArray);
+        jsonObject.put("Links", linkArray);
+        jsonObject.put("Datas", nodeArray);
 
         return jsonObject;
     }
+
     public static String dealString(String str) {
         if (str == null) {
             return "";
@@ -61,6 +64,7 @@ public class JsonTool {
         return str.replaceAll("\n", "").replaceAll(",", ";");
 
     }
+
     public static String revertString(String str) {
         if (str == null) {
             return "";
@@ -68,7 +72,8 @@ public class JsonTool {
         return str.replaceAll("'", "\"").replaceAll(";", ",");
 
     }
-    public  static  JSONObject getJson(ProcessRelation relation){
+
+    public static JSONObject getJson(ProcessRelation relation) {
         if (relation != null) {
             relation.setAfterTables(JsonTool.revertString(relation.getAfterTables()));
             relation.setMapJson(JsonTool.revertString(relation.getMapJson()));
@@ -76,15 +81,18 @@ public class JsonTool {
             relation.setAfterTables(JsonTool.revertString(relation.getAfterTables()));
             relation.setColumns(JsonTool.revertString(relation.getColumns()));
             relation.setComment(JsonTool.revertString(relation.getComment()));
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("tableName", relation.getTableName());
+            jsonObject.put("storeProcedure", relation.getStoreProcedure());
+            jsonObject.put("comment", relation.getComment());
+            jsonObject.put("columns", JSONArray.parse(relation.getColumns()));
+            jsonObject.put("sourceTables", JSONArray.parse(relation.getSourceTables()));
+            jsonObject.put("afterTables", JSONArray.parse(relation.getAfterTables()));
+            jsonObject.put("mapJson", JSONObject.parseObject(relation.getMapJson()));
+
+            return jsonObject;
         }
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("tableName",relation.getTableName());
-        jsonObject.put("storeProcedure",relation.getStoreProcedure());
-        jsonObject.put("comment",relation.getComment());
-        jsonObject.put("columns",JSONArray.parse(relation.getColumns()));
-        jsonObject.put("sourceTables",JSONArray.parse(relation.getSourceTables()));
-        jsonObject.put("afterTables",JSONArray.parse(relation.getAfterTables()));
-        jsonObject.put("mapJson",JSONObject.parseObject(relation.getMapJson()));
-        return  jsonObject;
+        return null;
     }
 }

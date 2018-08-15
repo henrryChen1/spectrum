@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.plkj.spectrum.dao.SourceDataNodeDao">
+
+    <resultMap id="pr" type="com.plkj.spectrum.bean.SourceDataNode">
+        <result column="target_table_name" property="targetTableName"/>
+        <result column="target_table_comment" property="targetTableComment"/>
+        <result column="target_column_name" property="targetColumnName"/>
+        <result column="target_column_comment" property="targetColumnComment"/>
+        <result column="source_table_name" property="sourceTableName"/>
+        <result column="source_table_comment" property="sourceTableComment"/>
+        <result column="source_column_name" property="sourceColumnName"/>
+        <result column="source_column_comment" property="sourceColumnComment"/>
+        <result column="store_procedure" property="storeProcedure"/>
+    </resultMap>
+
+    <select id="findAllData"  resultMap="pr">
+        select target_table_name,target_table_comment,target_column_name,
+        target_column_comment,source_table_name,source_table_comment,
+        source_column_name,source_column_comment,store_procedure
+        from source_data_node
+    </select>
+
+
+</mapper>

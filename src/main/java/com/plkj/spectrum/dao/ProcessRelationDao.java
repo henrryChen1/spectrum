@@ -10,4 +10,8 @@ public interface ProcessRelationDao {
     List<Map<String,String>> queryByFuzzyName(String tableName);
 
     ProcessRelation queryByTableName(String tableName);
+
+    void truncateTable();
+
+    void insertData(List<ProcessRelation> processRelationList);
 }

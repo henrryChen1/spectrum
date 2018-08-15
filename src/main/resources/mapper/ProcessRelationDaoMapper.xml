@@ -28,4 +28,18 @@
         where table_name = #{tableName}
     </select>
 
+    <update id="truncateTable">
+        truncate table process_relation
+    </update>
+
+    <insert id="insertData" parameterType="java.util.List">
+        insert into process_relation
+        (table_name,store_procedure,comment,columns,source_tables,after_tables,map_json)
+        values
+        <foreach collection="list" item="item" index="index"
+                 separator=",">
+            (#{item.tableName},#{item.storeProcedure},#{item.comment},#{item.columns},
+            #{item.sourceTables},#{item.afterTables},#{item.mapJson})
+        </foreach>
+    </insert>
 </mapper>

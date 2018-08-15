@@ -1,11 +1,9 @@
 package com.plkj.spectrum;
 
-import com.alibaba.fastjson.JSONArray;
 import com.plkj.spectrum.bean.ProcessRelation;
 import com.plkj.spectrum.bean.SourceDataNode;
 import com.plkj.spectrum.tool.JsonTool;
-import org.apache.commons.lang.StringUtils;
-import com.plkj.spectrum.tool.QueryExecl;
+import com.plkj.spectrum.tool.DataTool;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,7 +38,7 @@ public class MainTest {
     @Test
     public void insertDataTest() throws IOException, InvalidFormatException {
         StringBuffer sql = new StringBuffer("insert into PROCESS_RELATION values ");
-        List<ProcessRelation> processRelationList = QueryExecl.excelRead();
+        List<ProcessRelation> processRelationList = DataTool.executeData(DataTool.getInitData());
 
 // 拼接 并且插入数据库.d
         for (int i = 0; i < processRelationList.size(); i++) {
@@ -64,7 +62,7 @@ public class MainTest {
     @Test
     public void insertSourceDataTest() throws IOException, InvalidFormatException {
         StringBuffer sql = new StringBuffer("insert into SOURCE_DATA_NODE values ");
-        List<SourceDataNode> sourceDataNodeList = QueryExecl.getInitData();
+        List<SourceDataNode> sourceDataNodeList = DataTool.getInitData();
 
 // 拼接 并且插入数据库.d
         for (int i = 0; i < sourceDataNodeList.size(); i++) {

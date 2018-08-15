@@ -3,7 +3,9 @@ package com.plkj.spectrum.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.plkj.spectrum.bean.ProcessRelation;
+import com.plkj.spectrum.bean.SourceDataNode;
 import com.plkj.spectrum.service.ProcessRelationService;
+import com.plkj.spectrum.service.SourceDataNodeService;
 import org.apache.http.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +25,8 @@ public class ProcessRelationController {
 
     @Autowired
     private ProcessRelationService service;
+    @Autowired
+    private SourceDataNodeService sourceDataNodeService;
 
     //根据表名进行模糊查询 返回List
     @RequestMapping("/fuzzyQuery")
@@ -37,4 +41,20 @@ public class ProcessRelationController {
 
         return  service.queryByName(tableName);
     }
+    //重新计算数据
+    @RequestMapping("/executeData")
+    public void  executeDate(HttpServletResponse response){
+
+        response.addHeader("Access-Control-Allow-Origin", "http://localhost:8020");
+        sourceDataNodeService.executeData();
+    }
+    //返回单个字段的影响表与这个字段影响的表
+    @RequestMapping("columnQuery")
+    public  JSONObject columnQuery(String tableName, String columnName,HttpServletResponse response){
+        response.addHeader("Access-Control-Allow-Origin", "http://localhost:8020");
+
+        return  service.queryByTableAndColumnName(tableName,columnName);
+    }
+
+
 }

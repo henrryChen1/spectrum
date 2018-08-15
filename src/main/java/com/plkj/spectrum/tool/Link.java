@@ -8,6 +8,30 @@ public class Link {
     private int value;
     private String souceTable;
     private String targetTable;
+    private String sourceColumn;
+    private String targetColumn;
+
+
+    @Override
+    public String toString() {
+        return "Link{" +
+                "source=" + source +
+                ", target=" + target +
+                ", value=" + value +
+                ", souceTable='" + souceTable + '\'' +
+                ", targetTable='" + targetTable + '\'' +
+                ", sourceColumn='" + sourceColumn + '\'' +
+                ", targetColumn='" + targetColumn + '\'' +
+                '}';
+    }
+    public Link(int value, String souceTable, String targetTable, String sourceColumn, String targetColumn) {
+
+        this.value = value;
+        this.souceTable = souceTable;
+        this.targetTable = targetTable;
+        this.sourceColumn = sourceColumn;
+        this.targetColumn = targetColumn;
+    }
 
     public Link(int value, String souceTable, String targetTable) {
         this.value = value;
@@ -15,18 +39,26 @@ public class Link {
         this.targetTable = targetTable;
     }
 
-    public Link() {
+    public void setSourceColumn(String sourceColumn) {
+        this.sourceColumn = sourceColumn;
     }
 
-    @Override
-    public String toString() {
-        return "Link{" +
-                "source=" + source +
-                ", target=" + target +
-                ", value='" + value + '\'' +
-                ", souceTable='" + souceTable + '\'' +
-                ", targetTable='" + targetTable + '\'' +
-                '}';
+    public void setTargetColumn(String targetColumn) {
+        this.targetColumn = targetColumn;
+    }
+
+    public String getSourceColumn() {
+
+        return sourceColumn;
+    }
+
+    public String getTargetColumn() {
+        return targetColumn;
+    }
+
+
+
+    public Link() {
     }
 
     public int getSource() {

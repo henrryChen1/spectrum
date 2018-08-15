@@ -115,6 +115,4 @@ public class ProcessRelation implements Serializable {
     public void setMapJson(String mapJson) {
         this.mapJson = mapJson;
     }
-
-
 }

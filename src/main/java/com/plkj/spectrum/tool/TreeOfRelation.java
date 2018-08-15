@@ -18,6 +18,7 @@ public class TreeOfRelation {
     }
 
     public TreeOfRelation() {
+        init();
     }
 
     public List<Link> getLinks() {
