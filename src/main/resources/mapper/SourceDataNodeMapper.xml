@@ -21,5 +21,17 @@
         from source_data_node
     </select>
 
+    <insert id="insertData" parameterType="java.util.List">
+        insert into source_data_node
+        (target_table_name,target_table_comment,target_column_name,target_column_comment,
+        source_table_name,source_table_comment,source_column_name,source_column_comment,store_procedure)
+        values
+        <foreach collection="list" item="item" index="index"
+                 separator=",">
+            (#{item.targetTableName},#{item.targetTableComment},#{item.targetColumnName},#{item.targetColumnComment},
+            #{item.sourceTableName},#{item.sourceTableComment},#{item.sourceColumnName},#{item.sourceColumnComment},
+            #{item.storeProcedure})
+        </foreach>
+    </insert>
 
 </mapper>

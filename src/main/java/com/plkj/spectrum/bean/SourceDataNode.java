@@ -1,6 +1,8 @@
 package com.plkj.spectrum.bean;
 
-public class SourceDataNode {
+import java.io.Serializable;
+
+public class SourceDataNode implements Serializable{
     private String targetTableName;
     private String targetTableComment;
     private String targetColumnName;
@@ -10,6 +12,8 @@ public class SourceDataNode {
     private String sourceColumnName;
     private String sourceColumnComment;
     private String storeProcedure;
+
+    private static final long serialVersionUID = 1L;
 
     public SourceDataNode(String targetTableName, String targetTableComment, String targetColumnName,
                           String targetColumnComment, String sourceTableName, String sourceTableComment,

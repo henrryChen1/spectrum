@@ -61,15 +61,15 @@ public class JsonTool {
         if (str == null) {
             return "";
         }
-        return str.replaceAll("\n", "").replaceAll(",", ";");
 
+        return str.replaceAll("[^a-zA-z0-9():_\\u4e00-\\u9fa5]","");
     }
 
     public static String revertString(String str) {
         if (str == null) {
             return "";
         }
-        return str.replaceAll("'", "\"").replaceAll(";", ",");
+        return str.replaceAll("'", "\"").replaceAll("&&", ",");
 
     }
 
@@ -93,6 +93,6 @@ public class JsonTool {
 
             return jsonObject;
         }
-        return null;
+        return new JSONObject();
     }
 }

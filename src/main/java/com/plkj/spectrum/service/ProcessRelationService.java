@@ -10,9 +10,12 @@ import com.plkj.spectrum.tool.DataTool;
 import com.plkj.spectrum.tool.JsonTool;
 import com.plkj.spectrum.tool.TreeOfRelation;
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +33,7 @@ public class ProcessRelationService {
         List<Map<String, String>> result = dao.queryByFuzzyName(tableName);
         JSONArray array = new JSONArray();
         if (result == null || result.size() == 0) {
-            return null;
+            return new JSONArray();
         }
         for (Map<String,String> map : result) {
                 JSONObject object = new JSONObject();
@@ -69,4 +72,6 @@ public class ProcessRelationService {
         JSONObject object = JsonTool.getJson(relation);
         return  object;
     }
+
+
 }

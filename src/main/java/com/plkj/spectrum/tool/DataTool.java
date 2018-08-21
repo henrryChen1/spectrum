@@ -5,13 +5,16 @@ import com.alibaba.fastjson.JSONObject;
 import com.plkj.spectrum.bean.ProcessRelation;
 import com.plkj.spectrum.bean.SourceDataNode;
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.Test;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,127 +33,12 @@ import java.util.Map;
 public class DataTool {
     public static final String SAMPLE_XLSX_FILE_PATH = "/Users/chenwei/Code" +
             "/spectrum/src/main/test1.xlsx";
+    private static final String SUFFIX_2003 = ".xls";
+    private static final String SUFFIX_2007 = ".xlsx";
+
 
     public static void main(String[] args) throws IOException, InvalidFormatException {
-        List<ProcessRelation> processRelationList = executeData(getInitData());
     }
-
-//    public static List<ProcessRelation> excelRead() throws IOException, InvalidFormatException {
-//
-//        // Creating a Workbook from an Excel file (.xls or .xlsx)
-//        Workbook workbook = WorkbookFactory.create(new File(SAMPLE_XLSX_FILE_PATH));
-//
-//        Iterator<Sheet> sheetIterable = workbook.sheetIterator();
-//        List<RelationObject> list = new ArrayList<>();
-//
-//        List<Node> nodeList = new ArrayList<>();
-//        List<Link> linkList = new LinkedList<>();
-//        while (sheetIterable.hasNext()) {
-//            Sheet sheet = sheetIterable.next();
-//            Iterator<Row> rowIterator = sheet.rowIterator();
-//            List<CellRangeAddress> crs = sheet.getMergedRegions();
-//            for (CellRangeAddress cr : crs) {
-//                if (cr.getFirstColumn() == 0 || cr.getFirstColumn() == 5) {
-//                    int rowIndex = cr.getFirstRow();
-//                    int lastRow = cr.getLastRow();
-//                    int cell = cr.getFirstColumn();
-//                    Node node = new Node();
-//                    node.setName(StringUtils.trim(sheet.getRow(rowIndex).getCell(cell).getStringCellValue())
-//                            .toUpperCase());
-//                    node.setComment(StringUtils.trim(sheet.getRow(rowIndex).getCell(cell + 1).getStringCellValue())
-//                            .toUpperCase());
-//                    if (cr.getFirstColumn() == 0) {
-//                        node.setStoreProcedure(StringUtils.trim(sheet.getRow(rowIndex).getCell(4).getStringCellValue())
-//                                .toUpperCase());
-//                    }
-//                    cell = cell + 2;
-//                    node.setColums(new ArrayList<>());
-//                    String targetName = StringUtils.trim(sheet.getRow(cr.getFirstRow()).
-//                            getCell(cr.getFirstColumn()).getStringCellValue()).toUpperCase();
-//                    while (rowIndex <= lastRow) {
-//                        if (sheet.getRow(rowIndex).getCell(cell) != null &&
-//                                StringUtils.isNotBlank(sheet.getRow(rowIndex).getCell(cell).toString())) {
-//                            String name = StringUtils.trim(sheet.getRow(rowIndex).getCell(cell).getStringCellValue())
-//                                    .toUpperCase();
-//                            String comment = StringUtils.trim(sheet.getRow(rowIndex).getCell(cell + 1).getStringCellValue())
-//                                    .toUpperCase();
-//                            node.addColumn(new Column(name, comment));
-//                        }
-//                        String sourceName = StringUtils.trim(sheet.getRow(rowIndex).getCell(5).getStringCellValue()).
-//                                toUpperCase();
-//
-//                        if (cr.getFirstColumn() == 0 && StringUtils.isNotBlank(sourceName)) {
-//                            Link link = new Link();
-//                            link.setTargetTable(targetName);
-//                            link.setSouceTable(sourceName);
-//                            link.setValue(0);
-//                            linkList.add(link);
-//                        }
-//                        rowIndex++;
-//                    }
-//
-//                    if (nodeList.size() > 0) {
-//                        for (int i = 0; i < nodeList.size(); i++) {
-//                            Node existNode = nodeList.get(i);
-//                            if (existNode.getName().equalsIgnoreCase(node.getName())) {
-//                                for (Column column : node.getColums()) {
-//                                    if (!existNode.getColums().contains(column)) {
-//                                        existNode.addColumn(column);
-//                                    }
-//                                }
-//                            } else if (i == nodeList.size() - 1) {
-//                                nodeList.add(node);
-//                            }
-//                        }
-//                    } else {
-//                        nodeList.add(node);
-//                    }
-//                }
-//            }
-//
-//
-//        }
-//        paseResult(nodeList, linkList);
-//        //找出了所有的Node与link已经
-//        List<ProcessRelation> processRelationList = getProcessRelationList(nodeList, linkList);
-//        return processRelationList;
-//    }
-//public static void paseResult(List<Node> nodeList, List<Link> linkList) {
-//    Map<Node, Collection<Node>> replaceMap = new HashMap<>();
-//    String targetName = "";
-//    for (Node node : replaceMap.keySet()) {
-//        nodeList.remove(node);
-//        Collection<Node> nodeCollection = replaceMap.get(node);
-//        for (int i = 0; i < linkList.size(); i++) {
-//            if (linkList.get(i).getSouceTable().equalsIgnoreCase(node.getName())) {
-//                targetName = linkList.get(i).getTargetTable();
-//                linkList.remove(i);
-//            }
-//        }
-//        for (Node newNode : nodeCollection) {
-//            //NodeList
-//            if (nodeList.size() > 0) {
-//                for (int i = 0; i < nodeList.size(); i++) {
-//                    Node existNode = nodeList.get(i);
-//                    if (existNode.getName().equalsIgnoreCase(newNode.getName())) {
-//                        for (Column column : newNode.getColums()) {
-//                            if (!existNode.getColums().contains(column)) {
-//                                existNode.addColumn(column);
-//                            }
-//                        }
-//                    } else if (i == nodeList.size() - 1) {
-//                        nodeList.add(newNode);
-//                    }
-//                }
-//            } else {
-//                nodeList.add(newNode);
-//            }
-//            if (null != targetName && StringUtils.isNotBlank(targetName)) {
-//                linkList.add(new Link(0, newNode.getName(), targetName));
-//            }
-//        }
-//    }
-//}
 
     private static List<ProcessRelation> getProcessRelationList(List<Node> nodeList, List<Link> linkList)
             throws IOException, InvalidFormatException {
@@ -231,9 +119,21 @@ public class DataTool {
     }
 
 
-    public static List<SourceDataNode> getInitData() throws IOException, InvalidFormatException {
+    public static List<SourceDataNode> getInitData(MultipartFile file) throws IOException, InvalidFormatException {
         // Creating a Workbook from an Excel file (.xls or .xlsx)
-        Workbook workbook = WorkbookFactory.create(new File(SAMPLE_XLSX_FILE_PATH));
+        if (file == null) {
+            return null;
+        }
+        String originalFilename = file.getOriginalFilename();
+        Workbook workbook = null;
+
+        if (originalFilename.endsWith(SUFFIX_2003)) {
+            workbook = new HSSFWorkbook(file.getInputStream());
+        } else if (originalFilename.endsWith(SUFFIX_2007)) {
+            workbook = new XSSFWorkbook(file.getInputStream());
+        } else {
+            return null;
+        }
 
         Iterator<Sheet> sheetIterable = workbook.sheetIterator();
 
@@ -354,19 +254,6 @@ public class DataTool {
         return new Result(false, 0, 0, 0, 0);
     }
 
-    @Test
-    public void test() {
-        try {
-            List<SourceDataNode> sourceDataNodes = getInitData();
-            JSONArray array = new JSONArray();
-            array.addAll(sourceDataNodes);
-            System.out.println(array.toJSONString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InvalidFormatException e) {
-            e.printStackTrace();
-        }
-    }
 
     public static List<ProcessRelation> executeData(List<SourceDataNode> sourceDataNodeList)
             throws IOException, InvalidFormatException {
@@ -454,7 +341,8 @@ public class DataTool {
             }
         }
 
-        otter:for(SourceDataNode sourceDataNode:sourceDataNodes) {
+        otter:
+        for (SourceDataNode sourceDataNode : sourceDataNodes) {
             if (sourceDataNode.getTargetTableName().equalsIgnoreCase(tableName)
                     && sourceDataNode.getTargetColumnName().equalsIgnoreCase(columnName)) {
 
@@ -500,7 +388,7 @@ public class DataTool {
                     }
                 } else {
                     Node node = new Node();
-                    node.setName(sourceDataNode.getSourceColumnName());
+                    node.setName(sourceDataNode.getSourceTableName());
                     node.addColumn(new Column(sourceDataNode.getSourceColumnName()
                             , sourceDataNode.getSourceColumnComment()));
                     treeOfRelation.addNode(node);

@@ -70,11 +70,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.nodes</groupId>
-            <artifactId>spring-nodes-hadoop</artifactId>
-            <version>2.5.0.RELEASE</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.nodes</groupId>-->
+            <!--<artifactId>spring-nodes-hadoop</artifactId>-->
+            <!--&lt;!&ndash;<version></version>&ndash;&gt;-->
+        <!--</dependency>-->
         <dependency>
             <groupId>org.apache.hive</groupId>
             <artifactId>hive-jdbc</artifactId>

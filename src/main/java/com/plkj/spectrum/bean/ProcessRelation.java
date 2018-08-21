@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProcessRelation implements Serializable {
-    private static final long serialVersionUID = 1L;
     private String tableName;
     private String storeProcedure;
     private String comment;
@@ -14,6 +13,8 @@ public class ProcessRelation implements Serializable {
     private String afterTables;
     private String mapJson;
 
+
+    private static final long serialVersionUID = 2L;
 
     public ProcessRelation() {
         init();

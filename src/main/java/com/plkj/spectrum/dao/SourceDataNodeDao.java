@@ -7,4 +7,5 @@ import java.util.List;
 public interface SourceDataNodeDao {
     List<SourceDataNode> findAllData();
 
+    void insertData(List<SourceDataNode> sourceDataNodes);
 }
