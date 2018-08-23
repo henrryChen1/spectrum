@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>血缘关系平台</title>
+
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <!-- Place favicon.ico in the root directory -->
+
+    <link rel="stylesheet" href="styles/main.css">
+
+    <link rel="stylesheet" href="scripts/lib/joint/joint.min.css">
+
+    <link rel="stylesheet" href="scripts/lib/zTree/zTreeStyle.css">
+
+    <link rel="stylesheet" href="styles/tagTree.css">
+
+    <script>
+      var baseUrl = 'http://158.82.100.201:8001/ProcessRelation';
+      var fuzztQuery = '/fuzzyQuery', relationQuery = '/relationQuery', executeData = '/executeData', columnQuery = '/columnQuery';
+      var uploadUrl = '/upload';
+    </script>
+  </head>
+  <body>
+    <!--[if IE]>
+      <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+    <div class="clearfix" id="container" style="height: 100%;">
+      <div class="fl left-panel" id="leftPanel">
+        <h1 class="main-title">血缘关系平台</h1>
+        <div class="search-form">
+          <input type="text" placeholder="请输入表名" class="search-input" id="searchInput">
+        </div>
+        <div class="button-group clearfix">
+          <form id="uploadForm" enctype="multipart/form-data" hidden>
+            <input type="file" id="uploadFile" name="file" accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+          </form>
+          <button for="uploadFile" id="uploadExcelButton" class="handle-button fl">上传Excel</button>
+          <button id="initDataButton" class="handle-button fl">初始化数据</button>
+        </div>
+        <div id="treeDemo" class="ztree"></div>
+      </div>
+      <div class="fl right-panel" id="rightPanel">
+        <h3 class="-title" id="basicTitle">基本信息</h3>
+        <div class="table-info clearfix" id="basicInfo">
+          <p class="table-name fl" id="tableName"></p><!-- 表名 -->
+          <p class="fl" id="storeProcedure"></p><!-- 所属存储过程 -->
+          <p class="fl" id="tableComment"></p><!-- 表注释 -->
+        </div>
+        <div class="table-relate clearfix" id="tableRelated"><!-- 来源表和影响表的 表格展示 -->
+          <div id="sourceTables" class="fl"></div>
+          <div id="targetTables" class="fl"></div>
+        </div>
+        <div style="position: relative; padding-left: 20px; width: 100%; overflow-x: auto;" id="chartContainer">
+          <span id="fieldComment" class="filed-comment"></span>
+          <div id="myholder"></div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- <div id="paper"></div> -->
+
+    <!-- <div id="paper-custom-elements"></div> -->
+
+    <script src="scripts/lib/jquery.min.js"></script>
+
+    <script src="scripts/lib/lodash.min.js"></script>
+
+    <script src="scripts/lib/backbone-min.js"></script>
+
+    <script src="scripts/lib/graphlib.core.min.js"></script>
+
+    <script src="scripts/lib/dagre.core.min.js"></script>
+
+    <script src="scripts/lib/joint/joint.min.js"></script>
+
+    <script src="scripts/lib/jquery.form.min.js"></script>
+
+    <script src="scripts/lib/ajax.js"></script>
+
+    <script src="scripts/lib/zTree/jquery.ztree.core.js"></script>
+
+    <script src="scripts/main.js"></script>
+  </body>
+</html>
