@@ -119,4 +119,26 @@ public class Link {
             }
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Link link = (Link) o;
+
+        if (!souceTable.equals(link.souceTable)) return false;
+        if (!targetTable.equals(link.targetTable)) return false;
+        if (!sourceColumn.equals(link.sourceColumn)) return false;
+        return targetColumn.equals(link.targetColumn);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = souceTable.hashCode();
+        result = 31 * result + targetTable.hashCode();
+        result = 31 * result + sourceColumn.hashCode();
+        result = 31 * result + targetColumn.hashCode();
+        return result;
+    }
 }

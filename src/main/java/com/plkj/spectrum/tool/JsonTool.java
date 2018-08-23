@@ -21,28 +21,32 @@ public class JsonTool {
         nodeList.addAll(sourceTree.getNodes());
         if (afterTree.getLinks() != null) {
             for (Link link : afterTree.getLinks()) {
-                for (Node node : nodeList) {
-                    if (link.getSouceTable().equalsIgnoreCase(node.getName())) {
-                        link.setSource(nodeList.indexOf(node));
+                if (!link.getSouceTable().equalsIgnoreCase(link.getTargetTable())) {
+                    for (Node node : nodeList) {
+                        if (link.getSouceTable().equalsIgnoreCase(node.getName())) {
+                            link.setSource(nodeList.indexOf(node));
+                        }
+                        if (link.getTargetTable().equalsIgnoreCase(node.getName())) {
+                            link.setTarget(nodeList.indexOf(node));
+                        }
                     }
-                    if (link.getTargetTable().equalsIgnoreCase(node.getName())) {
-                        link.setTarget(nodeList.indexOf(node));
-                    }
+                    linkList.add(link);
                 }
-                linkList.add(link);
             }
         }
         if (sourceTree.getLinks() != null) {
             for (Link link : sourceTree.getLinks()) {
-                for (Node node : nodeList) {
-                    if (link.getSouceTable().equalsIgnoreCase(node.getName())) {
-                        link.setSource(nodeList.indexOf(node));
+                if (!link.getSouceTable().equalsIgnoreCase(link.getTargetTable())) {
+                    for (Node node : nodeList) {
+                        if (link.getSouceTable().equalsIgnoreCase(node.getName())) {
+                            link.setSource(nodeList.indexOf(node));
+                        }
+                        if (link.getTargetTable().equalsIgnoreCase(node.getName())) {
+                            link.setTarget(nodeList.indexOf(node));
+                        }
                     }
-                    if (link.getTargetTable().equalsIgnoreCase(node.getName())) {
-                        link.setTarget(nodeList.indexOf(node));
-                    }
+                    linkList.add(link);
                 }
-                linkList.add(link);
             }
         }
         JSONArray nodeArray = new JSONArray();
@@ -62,7 +66,7 @@ public class JsonTool {
             return "";
         }
 
-        return str.replaceAll("[^a-zA-z0-9():_\\u4e00-\\u9fa5]","");
+        return str.replaceAll("[^a-zA-z0-9():_\\u4e00-\\u9fa5]", "");
     }
 
     public static String revertString(String str) {

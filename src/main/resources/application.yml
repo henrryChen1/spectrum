@@ -1,11 +1,14 @@
 # hive 数据源自定义配置
 hive:
-  url: jdbc:hive2://10.10.10.104:10000/cw
+#  url: jdbc:hive2://10.10.10.104:10000/cw
+#  username: cw
+#  password: cw
+  url: jdbc:hive2://158.82.100.201:10000/spectrum
   type: com.alibaba.druid.pool.DruidDataSource
   driver-class-name: org.apache.hive.jdbc.HiveDriver
-  username: cw
-  password: cw
-
+  username: hive
+  password: hive
+server.port: 8001
 
 ## phoenix 数据源自定义配置
 #phoenix:

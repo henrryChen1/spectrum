@@ -55,8 +55,8 @@ public class ProcessRelationController {
         return  service.queryByTableAndColumnName(tableName,columnName);
     }
 
-    @RequestMapping(value = "uploadexcel",method = RequestMethod.POST)
-    public JSONObject uploadexcel(@RequestPart("file") MultipartFile file, HttpServletResponse response){
+    @RequestMapping(value = "upload",method = RequestMethod.POST)
+    public JSONObject upload(@RequestPart("file") MultipartFile file, HttpServletResponse response){
         JSONObject object =sourceDataNodeService.insertExcel(file);
         return  object;
     }

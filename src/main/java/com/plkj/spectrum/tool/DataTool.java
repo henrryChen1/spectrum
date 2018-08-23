@@ -149,84 +149,100 @@ public class DataTool {
             Iterator<Row> rowIterator = sheet.rowIterator();
             List<CellRangeAddress> crs = sheet.getMergedRegions();
             for (CellRangeAddress cr : crs) {
-                if (cr.getFirstColumn() == 0) {
+                if (cr.getFirstColumn() == 1) {
                     int lastRow = cr.getLastRow();
                     int cell = cr.getFirstColumn();
                     int columnIndex = cr.getFirstRow();//列的Index
                     int sourceTableIndex = columnIndex; //sourceTable的Index
 
-                    targetTableName = StringUtils.trim(sheet.getRow(columnIndex).getCell(cell + 1)
+                    targetTableName = StringUtils.trim(sheet.getRow(columnIndex).getCell(cell)
                             .getStringCellValue()).toUpperCase();
-                    targetTableComment = StringUtils.trim(sheet.getRow(columnIndex).getCell(cell + 2)
+                    targetTableComment = StringUtils.trim(sheet.getRow(columnIndex).getCell(cell + 1)
                             .getStringCellValue()).toUpperCase();
-                    storeProcedure = StringUtils.trim(sheet.getRow(columnIndex).getCell(cell + 9)
+                    storeProcedure = StringUtils.trim(sheet.getRow(columnIndex).getCell(cell + 8)
                             .getStringCellValue()).toUpperCase();
                     while (columnIndex <= lastRow) {
-                        targetColumnName = StringUtils.trim(sheet.getRow(columnIndex).getCell(cell + 3)
+                        targetColumnName = StringUtils.trim(sheet.getRow(columnIndex).getCell(cell + 2)
                                 .getStringCellValue()).toUpperCase();
-                        targetColumnComment = StringUtils.trim(sheet.getRow(columnIndex).getCell(cell + 4)
+                        targetColumnComment = StringUtils.trim(sheet.getRow(columnIndex).getCell(cell + 3)
                                 .getStringCellValue()).toUpperCase();
-                        Result result = isMergedRegion(sheet, columnIndex, cell + 3);
+                        Result result = isMergedRegion(sheet, columnIndex, cell + 2);
                         if (result.merged) {
                             columnIndex = result.endRow + 1;
                             while (sourceTableIndex <= result.endRow) {
                                 String sourceTableName = StringUtils.trim(sheet.getRow(sourceTableIndex)
-                                        .getCell(cell + 5).getStringCellValue()).toUpperCase();
+                                        .getCell(cell + 4).getStringCellValue()).toUpperCase();
                                 String sourceTableComment = StringUtils.trim(sheet.getRow(sourceTableIndex)
-                                        .getCell(cell + 6).getStringCellValue()).toUpperCase();
-                                Result tableResult = isMergedRegion(sheet, sourceTableIndex, cell + 5);
+                                        .getCell(cell + 5).getStringCellValue()).toUpperCase();
+                                Result tableResult = isMergedRegion(sheet, sourceTableIndex, cell + 4);
                                 if (tableResult.merged) {
-                                    Result sourceTableResult = isMergedRegion(sheet, sourceTableIndex, cell + 5);
+                                    Result sourceTableResult = isMergedRegion(sheet, sourceTableIndex, cell + 4);
                                     if (sourceTableResult.merged) {
                                         while (sourceTableIndex <= sourceTableResult.endRow) {
                                             String sourceColumnName = StringUtils.trim(sheet.getRow(sourceTableIndex)
-                                                    .getCell(cell + 7).getStringCellValue()).toUpperCase();
+                                                    .getCell(cell + 6).getStringCellValue()).toUpperCase();
                                             String sourceColumnComment = StringUtils.trim(sheet.getRow(sourceTableIndex)
-                                                    .getCell(cell + 8).getStringCellValue()).toUpperCase();
+                                                    .getCell(cell + 7).getStringCellValue()).toUpperCase();
                                             SourceDataNode sourceDataNode = new SourceDataNode(targetTableName
                                                     , targetColumnComment, targetColumnName, targetColumnComment
                                                     , sourceTableName, sourceTableComment, sourceColumnName
                                                     , sourceColumnComment, storeProcedure);
-                                            sourceDataNodes.add(sourceDataNode);
+                                            if (StringUtils.isNotBlank(sourceDataNode.getTargetTableName())
+                                                    && StringUtils.isNotBlank(sourceDataNode.getSourceColumnName())
+                                                    ) {
+                                                sourceDataNodes.add(sourceDataNode);
+                                            }
                                             sourceTableIndex++;
                                         }
                                     } else {
                                         String sourceColumnName = StringUtils.trim(sheet.getRow(sourceTableIndex)
-                                                .getCell(cell + 7).getStringCellValue()).toUpperCase();
+                                                .getCell(cell + 6).getStringCellValue()).toUpperCase();
                                         String sourceColumnComment = StringUtils.trim(sheet.getRow(sourceTableIndex)
-                                                .getCell(cell + 8).getStringCellValue()).toUpperCase();
+                                                .getCell(cell + 7).getStringCellValue()).toUpperCase();
                                         SourceDataNode sourceDataNode = new SourceDataNode(targetTableName
                                                 , targetTableComment, targetColumnName, targetColumnComment, sourceTableName
                                                 , sourceTableComment, sourceColumnName, sourceColumnComment, storeProcedure);
-                                        sourceDataNodes.add(sourceDataNode);
+                                        if (StringUtils.isNotBlank(sourceDataNode.getTargetTableName())
+                                                && StringUtils.isNotBlank(sourceDataNode.getSourceColumnName())
+                                                ) {
+                                            sourceDataNodes.add(sourceDataNode);
+                                        }
                                         sourceTableIndex++;
                                     }
                                 } else {
                                     String sourceColumnName = StringUtils.trim(sheet.getRow(sourceTableIndex)
-                                            .getCell(cell + 7).getStringCellValue()).toUpperCase();
+                                            .getCell(cell + 6).getStringCellValue()).toUpperCase();
                                     String sourceColumnComment = StringUtils.trim(sheet.getRow(sourceTableIndex)
-                                            .getCell(cell + 8).getStringCellValue()).toUpperCase();
+                                            .getCell(cell + 7).getStringCellValue()).toUpperCase();
                                     SourceDataNode sourceDataNode = new SourceDataNode(targetTableName
                                             , targetTableComment, targetColumnName, targetColumnComment, sourceTableName
                                             , sourceTableComment, sourceColumnName, sourceColumnComment, storeProcedure);
-                                    sourceDataNodes.add(sourceDataNode);
+                                    if (StringUtils.isNotBlank(sourceDataNode.getTargetTableName())
+                                            && StringUtils.isNotBlank(sourceDataNode.getSourceColumnName())
+                                            ) {
+                                        sourceDataNodes.add(sourceDataNode);
+                                    }
                                     sourceTableIndex++;
                                 }
                             }
 
                         } else {
                             String sourceTableName = StringUtils.trim(sheet.getRow(sourceTableIndex)
-                                    .getCell(cell + 5).getStringCellValue()).toUpperCase();
+                                    .getCell(cell + 4).getStringCellValue()).toUpperCase();
                             String sourceTableComment = StringUtils.trim(sheet.getRow(sourceTableIndex)
-                                    .getCell(cell + 6).getStringCellValue()).toUpperCase();
+                                    .getCell(cell + 5).getStringCellValue()).toUpperCase();
                             String sourceColumnName = StringUtils.trim(sheet.getRow(sourceTableIndex)
-                                    .getCell(cell + 7).getStringCellValue()).toUpperCase();
+                                    .getCell(cell + 6).getStringCellValue()).toUpperCase();
                             String sourceColumnComment = StringUtils.trim(sheet.getRow(sourceTableIndex)
-                                    .getCell(cell + 8).getStringCellValue()).toUpperCase();
+                                    .getCell(cell + 7).getStringCellValue()).toUpperCase();
                             SourceDataNode sourceDataNode = new SourceDataNode(targetTableName, targetTableComment
                                     , targetColumnName, targetColumnComment, sourceTableName
                                     , sourceTableComment, sourceColumnName, sourceColumnComment, storeProcedure);
-                            sourceDataNodes.add(sourceDataNode);
+                            if (StringUtils.isNotBlank(sourceDataNode.getTargetTableName())
+                                    && StringUtils.isNotBlank(sourceDataNode.getSourceColumnName())
+                                    ) {
+                                sourceDataNodes.add(sourceDataNode);
+                            }
                             columnIndex++;
                             sourceTableIndex++;
                         }
@@ -261,7 +277,7 @@ public class DataTool {
         List<Link> linkList = new LinkedList<>();
         for (SourceDataNode sourceDataNode : sourceDataNodeList) {
             if (StringUtils.isNotBlank(sourceDataNode.getTargetColumnName()) &&
-                    StringUtils.isNotBlank(sourceDataNode.getTargetColumnName())) {
+                    StringUtils.isNotBlank(sourceDataNode.getTargetTableName())) {
                 if (nodeMap.containsKey(sourceDataNode.getTargetTableName())) {
                     Node node = nodeMap.get(sourceDataNode.getTargetTableName());
                     node.addColumn(new Column(sourceDataNode.getTargetColumnName(), sourceDataNode.getTargetColumnComment()));
@@ -307,11 +323,11 @@ public class DataTool {
 
         TreeOfRelation sourceTree = findColumnTree(tableName, columnName, new TreeOfRelation(), sourceDataNodes, 0);
         TreeOfRelation afterTree = findColumnTree(tableName, columnName, new TreeOfRelation(), sourceDataNodes, 1);
-        JSONObject mapJson = JsonTool.buildJson(afterTree, sourceTree);
         JSONArray afterTables = new JSONArray();
         JSONArray sourceTables = new JSONArray();
         afterTables.addAll(afterTree.getTableName());
         sourceTables.addAll(sourceTree.getTableName());
+        JSONObject mapJson = JsonTool.buildJson(afterTree, sourceTree);
         processRelation.setAfterTables(afterTables.toJSONString());
         processRelation.setSourceTables(sourceTables.toJSONString());
         processRelation.setMapJson(mapJson.toJSONString());
@@ -324,35 +340,18 @@ public class DataTool {
         if (treeOfRelation == null) {
             treeOfRelation = new TreeOfRelation();
         }
-        if (value == 0) {
-            for (Link link : treeOfRelation.getLinks()) {
-                if (link.getTargetTable().equalsIgnoreCase(tableName) &&
-                        link.getTargetColumn().equalsIgnoreCase(columnName)) {
-                    return treeOfRelation;
-                }
-
-            }
-        } else if (value == 1) {
-            for (Link link : treeOfRelation.getLinks()) {
-                if (link.getSouceTable().equalsIgnoreCase(tableName) &&
-                        link.getSourceColumn().equalsIgnoreCase(columnName)) {
-                    return treeOfRelation;
-                }
-            }
-        }
-
         otter:
         for (SourceDataNode sourceDataNode : sourceDataNodes) {
             if (sourceDataNode.getTargetTableName().equalsIgnoreCase(tableName)
-                    && sourceDataNode.getTargetColumnName().equalsIgnoreCase(columnName)) {
-
+                    && sourceDataNode.getTargetColumnName().equalsIgnoreCase(columnName) && value == 0) {
                 if (treeOfRelation.containTable(tableName)) {
 
                     for (Node node : treeOfRelation.getNodes()) {
                         if (node.getName().equalsIgnoreCase(tableName)) {
                             int index = treeOfRelation.getNodes().indexOf(node);
-                            treeOfRelation.getNodes().get(index).addColumn(new Column(sourceDataNode.getTargetColumnName(),
-                                    sourceDataNode.getTargetColumnComment()));
+                            treeOfRelation.getNodes().get(index).addColumn(
+                                    new Column(sourceDataNode.getTargetColumnName(),
+                                            sourceDataNode.getTargetColumnComment()));
                         }
                     }
                 } else {
@@ -361,50 +360,105 @@ public class DataTool {
                     node.addColumn(new Column(sourceDataNode.getTargetColumnName()
                             , sourceDataNode.getTargetColumnComment()));
                     treeOfRelation.addNode(node);
-
                 }
-                if (value == 0) {
-                    Link link = new Link();
-                    link.setValue(0);
-                    link.setTargetTable(sourceDataNode.getTargetTableName());
-                    link.setTargetColumn(sourceDataNode.getTargetColumnName());
-                    link.setSouceTable(sourceDataNode.getSourceTableName());
-                    link.setSourceColumn(sourceDataNode.getSourceColumnName());
-                    treeOfRelation.addLink(link);
-                    findColumnTree(sourceDataNode.getSourceTableName(), sourceDataNode.getSourceColumnName(),
-                            treeOfRelation, sourceDataNodes, value);
-                }
-                break otter;
+                if (treeOfRelation.containTable(sourceDataNode.getSourceTableName())) {
 
-            } else if (sourceDataNode.getSourceTableName().equalsIgnoreCase(tableName)
-                    && sourceDataNode.getSourceColumnName().equalsIgnoreCase(columnName)) {
-                if (treeOfRelation.containTable(tableName)) {
                     for (Node node : treeOfRelation.getNodes()) {
-                        if (node.getName().equalsIgnoreCase(tableName)) {
+                        if (node.getName().equalsIgnoreCase(sourceDataNode.getSourceTableName())) {
                             int index = treeOfRelation.getNodes().indexOf(node);
-                            treeOfRelation.getNodes().get(index).addColumn(new Column(sourceDataNode.getSourceColumnName(),
-                                    sourceDataNode.getSourceColumnComment()));
+                            treeOfRelation.getNodes().get(index).addColumn(
+                                    new Column(sourceDataNode.getSourceColumnName(),
+                                            sourceDataNode.getSourceColumnComment()));
                         }
                     }
                 } else {
                     Node node = new Node();
                     node.setName(sourceDataNode.getSourceTableName());
+                    node.setComment(sourceDataNode.getSourceTableComment());
                     node.addColumn(new Column(sourceDataNode.getSourceColumnName()
                             , sourceDataNode.getSourceColumnComment()));
                     treeOfRelation.addNode(node);
                 }
-                if (value == 1) {
-                    Link link = new Link();
-                    link.setValue(0);
-                    link.setTargetTable(sourceDataNode.getTargetTableName());
-                    link.setTargetColumn(sourceDataNode.getTargetColumnName());
-                    link.setSouceTable(sourceDataNode.getSourceTableName());
-                    link.setSourceColumn(sourceDataNode.getSourceColumnName());
+
+                Link link = new Link();
+                link.setValue(0);
+                link.setTargetTable(sourceDataNode.getTargetTableName());
+                link.setTargetColumn(sourceDataNode.getTargetColumnName());
+                link.setSouceTable(sourceDataNode.getSourceTableName());
+                link.setSourceColumn(sourceDataNode.getSourceColumnName());
+                boolean ifAdd = true;
+                for (Link everyLink : treeOfRelation.getLinks()) {
+                    if (everyLink.equals(link)) {
+                        ifAdd = false;
+                        break;
+                    }
+                }
+                if (ifAdd) ;
+                {
+                    treeOfRelation.addLink(link);
+                    findColumnTree(sourceDataNode.getSourceTableName(), sourceDataNode.getSourceColumnName(),
+                            treeOfRelation, sourceDataNodes, value);
+                }
+            } else if (sourceDataNode.getSourceTableName().equalsIgnoreCase(tableName)
+                    && sourceDataNode.getSourceColumnName().equalsIgnoreCase(columnName) && value == 1) {
+                int source = -1;
+                int target = -1;
+                if (treeOfRelation.containTable(tableName)) {
+                    for (Node node : treeOfRelation.getNodes()) {
+                        if (node.getName().equalsIgnoreCase(tableName)) {
+                            source = treeOfRelation.getNodes().indexOf(node);
+                            treeOfRelation.getNodes().get(source).addColumn(
+                                    new Column(sourceDataNode.getSourceColumnName(),
+                                            sourceDataNode.getSourceColumnComment()));
+                        }
+                    }
+                } else {
+                    Node node = new Node();
+                    node.setName(sourceDataNode.getSourceTableName());
+                    node.setComment(sourceDataNode.getSourceTableComment());
+                    node.addColumn(new Column(sourceDataNode.getSourceColumnName()
+                            , sourceDataNode.getSourceColumnComment()));
+                    treeOfRelation.addNode(node);
+                    source = treeOfRelation.getNodes().indexOf(node);
+                }
+
+                if (treeOfRelation.containTable(sourceDataNode.getTargetTableName())) {
+                    for (Node node : treeOfRelation.getNodes()) {
+                        if (node.getName().equalsIgnoreCase(sourceDataNode.getTargetTableName())) {
+                            target = treeOfRelation.getNodes().indexOf(node);
+                            treeOfRelation.getNodes().get(target).addColumn(
+                                    new Column(sourceDataNode.getTargetColumnName(),
+                                            sourceDataNode.getTargetColumnComment()));
+                        }
+                    }
+                } else {
+                    Node node = new Node();
+                    node.setName(sourceDataNode.getTargetTableName());
+                    node.setComment(sourceDataNode.getTargetTableComment());
+                    node.addColumn(new Column(sourceDataNode.getTargetColumnName()
+                            , sourceDataNode.getTargetColumnComment()));
+                    treeOfRelation.addNode(node);
+                    target = treeOfRelation.getNodes().indexOf(node);
+                }
+                Link link = new Link();
+                link.setValue(0);
+                link.setTargetTable(sourceDataNode.getTargetTableName());
+                link.setTargetColumn(sourceDataNode.getTargetColumnName());
+                link.setSouceTable(sourceDataNode.getSourceTableName());
+                link.setSourceColumn(sourceDataNode.getSourceColumnName());
+                boolean ifAdd = true;
+                for (Link everyLink : treeOfRelation.getLinks()) {
+                    if (everyLink.equals(link)) {
+                        ifAdd = false;
+                        break;
+                    }
+                }
+                if (ifAdd) ;
+                {
                     treeOfRelation.addLink(link);
                     findColumnTree(sourceDataNode.getTargetTableName(), sourceDataNode.getTargetColumnName(),
                             treeOfRelation, sourceDataNodes, value);
                 }
-                break otter;
             }
         }
         return treeOfRelation;
