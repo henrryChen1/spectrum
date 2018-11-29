@@ -1,0 +1,14 @@
+server.port: 8001
+mybatis.type-aliases-package: com.plkj.spectrum.bean
+mybatis.mapper-locations: classpath:mapper/*.xml
+# hive 数据源自定义配置
+spring:
+  datasource:
+    url: jdbc:hive2://155.82.107.41:10000/spectrum
+    username: hive
+    password:
+    driver-class-name: org.apache.hive.jdbc.HiveDriver
+
+logging:
+  level:
+    com.plkj.spectrum.dao: debug

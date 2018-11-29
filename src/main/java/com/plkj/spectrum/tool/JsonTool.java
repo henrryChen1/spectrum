@@ -11,14 +11,27 @@ import java.util.Set;
 
 public class JsonTool {
     public static JSONObject buildJson(TreeOfRelation afterTree, TreeOfRelation sourceTree) {
-        //fix
+        //TODO
         List<Node> nodeList = new ArrayList<>();
         List<Link> linkList = new ArrayList<>();
         nodeList.addAll(afterTree.getNodes());
-        if ((sourceTree.getNodes().size()) != 0) {
-            sourceTree.getNodes().remove(0);
+        for (Node node : sourceTree.getNodes()) {
+            boolean b = true;
+            for (Node existNode : nodeList) {
+                if (existNode.getName().equalsIgnoreCase(node.getName())) {
+                    b=false;
+                    for(Column column:node.getColums()){
+                        if(!existNode.getColums().contains(column)){
+                            existNode.addColumn(column);
+                        }
+                    }
+                }
+            }
+            if(b){
+                nodeList.add(node);
+            }
         }
-        nodeList.addAll(sourceTree.getNodes());
+        //nodeList.addAll(sourceTree.getNodes());
         if (afterTree.getLinks() != null) {
             for (Link link : afterTree.getLinks()) {
                 if (!link.getSouceTable().equalsIgnoreCase(link.getTargetTable())) {

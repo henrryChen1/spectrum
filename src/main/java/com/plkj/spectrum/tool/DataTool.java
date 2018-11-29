@@ -61,13 +61,17 @@ public class DataTool {
             afterTables.addAll(afterTable.getTableName());
 
             processRelation.setColumns(columns.toJSONString().replace("\"", "'")
-                    .replace("\n", ""));
+                    .replace("\n", "").replace("\r","")
+                    .replace("\t",""));
             processRelation.setSourceTables(soucreTables.toJSONString().replace("\"", "'")
-                    .replace("\n", ""));
+                    .replace("\n", "").replace("\r","")
+                    .replace("\t",""));
             processRelation.setAfterTables(afterTables.toJSONString().replace("\"", "'").
-                    replace("\n", ""));
+                    replace("\n", "").replace("\r","")
+                    .replace("\t",""));
             processRelation.setMapJson(StringUtils.replace(JsonTool.buildJson(sourceTable, afterTable).toJSONString(),
-                    "\"", "'").replace("\n", ""));
+                    "\"", "'").replace("\n", "")
+                    .replace("\r","").replace("\t",""));;
             processRelationList.add(processRelation);
         }
         return processRelationList;
@@ -155,34 +159,47 @@ public class DataTool {
                     int columnIndex = cr.getFirstRow();//列的Index
                     int sourceTableIndex = columnIndex; //sourceTable的Index
 
-                    targetTableName = StringUtils.trim(sheet.getRow(columnIndex).getCell(cell)
-                            .getStringCellValue()).toUpperCase();
-                    targetTableComment = StringUtils.trim(sheet.getRow(columnIndex).getCell(cell + 1)
-                            .getStringCellValue()).toUpperCase();
-                    storeProcedure = StringUtils.trim(sheet.getRow(columnIndex).getCell(cell + 8)
-                            .getStringCellValue()).toUpperCase();
+                    targetTableName = sheet.getRow(columnIndex).getCell(cell)!=null?
+                            StringUtils.trim(sheet.getRow(columnIndex).getCell(cell)
+                            .getStringCellValue()).toUpperCase():"";
+                    targetTableComment = sheet.getRow(columnIndex).getCell(cell + 1)!=null?
+                            StringUtils.trim(sheet.getRow(columnIndex).getCell(cell + 1)
+                            .getStringCellValue()).toUpperCase():"";
+                    storeProcedure = sheet.getRow(columnIndex).getCell(cell + 8)!=null?
+                            StringUtils.trim(sheet.getRow(columnIndex).getCell(cell + 8)
+                            .getStringCellValue()).toUpperCase():"";
                     while (columnIndex <= lastRow) {
-                        targetColumnName = StringUtils.trim(sheet.getRow(columnIndex).getCell(cell + 2)
-                                .getStringCellValue()).toUpperCase();
-                        targetColumnComment = StringUtils.trim(sheet.getRow(columnIndex).getCell(cell + 3)
-                                .getStringCellValue()).toUpperCase();
+                        targetColumnName =sheet.getRow(columnIndex).getCell(cell + 2)!=null?
+                                StringUtils.trim(sheet.getRow(columnIndex).getCell(cell + 2)
+                                .getStringCellValue()).toUpperCase():"";
+                        targetColumnComment = sheet.getRow(columnIndex).getCell(cell + 3)!=null?
+                                StringUtils.trim(sheet.getRow(columnIndex).getCell(cell + 3)
+                                .getStringCellValue()).toUpperCase():"";
                         Result result = isMergedRegion(sheet, columnIndex, cell + 2);
                         if (result.merged) {
                             columnIndex = result.endRow + 1;
                             while (sourceTableIndex <= result.endRow) {
-                                String sourceTableName = StringUtils.trim(sheet.getRow(sourceTableIndex)
-                                        .getCell(cell + 4).getStringCellValue()).toUpperCase();
-                                String sourceTableComment = StringUtils.trim(sheet.getRow(sourceTableIndex)
-                                        .getCell(cell + 5).getStringCellValue()).toUpperCase();
+                                String sourceTableName = sheet.getRow(sourceTableIndex)
+                                        .getCell(cell + 4)!=null?
+                                        StringUtils.trim(sheet.getRow(sourceTableIndex)
+                                        .getCell(cell + 4).getStringCellValue()).toUpperCase():"";
+                                String sourceTableComment = sheet.getRow(sourceTableIndex)
+                                        .getCell(cell + 5)!=null?
+                                        StringUtils.trim(sheet.getRow(sourceTableIndex)
+                                        .getCell(cell + 5).getStringCellValue()).toUpperCase():"";
                                 Result tableResult = isMergedRegion(sheet, sourceTableIndex, cell + 4);
                                 if (tableResult.merged) {
                                     Result sourceTableResult = isMergedRegion(sheet, sourceTableIndex, cell + 4);
                                     if (sourceTableResult.merged) {
                                         while (sourceTableIndex <= sourceTableResult.endRow) {
-                                            String sourceColumnName = StringUtils.trim(sheet.getRow(sourceTableIndex)
-                                                    .getCell(cell + 6).getStringCellValue()).toUpperCase();
-                                            String sourceColumnComment = StringUtils.trim(sheet.getRow(sourceTableIndex)
-                                                    .getCell(cell + 7).getStringCellValue()).toUpperCase();
+                                            String sourceColumnName = sheet.getRow(sourceTableIndex)
+                                                    .getCell(cell + 6)!=null?
+                                                    StringUtils.trim(sheet.getRow(sourceTableIndex)
+                                                    .getCell(cell + 6).getStringCellValue()).toUpperCase():"";
+                                            String sourceColumnComment = sheet.getRow(sourceTableIndex)
+                                                    .getCell(cell + 7)!=null?
+                                                    StringUtils.trim(sheet.getRow(sourceTableIndex)
+                                                    .getCell(cell + 7).getStringCellValue()).toUpperCase():"";
                                             SourceDataNode sourceDataNode = new SourceDataNode(targetTableName
                                                     , targetColumnComment, targetColumnName, targetColumnComment
                                                     , sourceTableName, sourceTableComment, sourceColumnName
@@ -195,10 +212,14 @@ public class DataTool {
                                             sourceTableIndex++;
                                         }
                                     } else {
-                                        String sourceColumnName = StringUtils.trim(sheet.getRow(sourceTableIndex)
-                                                .getCell(cell + 6).getStringCellValue()).toUpperCase();
-                                        String sourceColumnComment = StringUtils.trim(sheet.getRow(sourceTableIndex)
-                                                .getCell(cell + 7).getStringCellValue()).toUpperCase();
+                                        String sourceColumnName = sheet.getRow(sourceTableIndex)
+                                                .getCell(cell + 6)!=null?
+                                                StringUtils.trim(sheet.getRow(sourceTableIndex)
+                                                .getCell(cell + 6).getStringCellValue()).toUpperCase():"";
+                                        String sourceColumnComment = sheet.getRow(sourceTableIndex)
+                                                .getCell(cell + 7)!=null?
+                                                StringUtils.trim(sheet.getRow(sourceTableIndex)
+                                                .getCell(cell + 7).getStringCellValue()).toUpperCase():"";
                                         SourceDataNode sourceDataNode = new SourceDataNode(targetTableName
                                                 , targetTableComment, targetColumnName, targetColumnComment, sourceTableName
                                                 , sourceTableComment, sourceColumnName, sourceColumnComment, storeProcedure);
@@ -210,10 +231,14 @@ public class DataTool {
                                         sourceTableIndex++;
                                     }
                                 } else {
-                                    String sourceColumnName = StringUtils.trim(sheet.getRow(sourceTableIndex)
-                                            .getCell(cell + 6).getStringCellValue()).toUpperCase();
-                                    String sourceColumnComment = StringUtils.trim(sheet.getRow(sourceTableIndex)
-                                            .getCell(cell + 7).getStringCellValue()).toUpperCase();
+                                    String sourceColumnName = sheet.getRow(sourceTableIndex)
+                                            .getCell(cell + 6)!=null?
+                                            StringUtils.trim(sheet.getRow(sourceTableIndex)
+                                            .getCell(cell + 6).getStringCellValue()).toUpperCase():"";
+                                    String sourceColumnComment = sheet.getRow(sourceTableIndex)
+                                            .getCell(cell + 7)!=null?
+                                            StringUtils.trim(sheet.getRow(sourceTableIndex)
+                                            .getCell(cell + 7).getStringCellValue()).toUpperCase():"";
                                     SourceDataNode sourceDataNode = new SourceDataNode(targetTableName
                                             , targetTableComment, targetColumnName, targetColumnComment, sourceTableName
                                             , sourceTableComment, sourceColumnName, sourceColumnComment, storeProcedure);
@@ -227,14 +252,22 @@ public class DataTool {
                             }
 
                         } else {
-                            String sourceTableName = StringUtils.trim(sheet.getRow(sourceTableIndex)
-                                    .getCell(cell + 4).getStringCellValue()).toUpperCase();
-                            String sourceTableComment = StringUtils.trim(sheet.getRow(sourceTableIndex)
-                                    .getCell(cell + 5).getStringCellValue()).toUpperCase();
-                            String sourceColumnName = StringUtils.trim(sheet.getRow(sourceTableIndex)
-                                    .getCell(cell + 6).getStringCellValue()).toUpperCase();
-                            String sourceColumnComment = StringUtils.trim(sheet.getRow(sourceTableIndex)
-                                    .getCell(cell + 7).getStringCellValue()).toUpperCase();
+                            String sourceTableName = sheet.getRow(sourceTableIndex)
+                                    .getCell(cell + 4)!=null?
+                                    StringUtils.trim(sheet.getRow(sourceTableIndex)
+                                    .getCell(cell + 4).getStringCellValue()).toUpperCase():"";
+                            String sourceTableComment = sheet.getRow(sourceTableIndex)
+                                    .getCell(cell + 5)!=null?
+                                    StringUtils.trim(sheet.getRow(sourceTableIndex)
+                                    .getCell(cell + 5).getStringCellValue()).toUpperCase():"";
+                            String sourceColumnName = sheet.getRow(sourceTableIndex)
+                                    .getCell(cell + 6)!=null?
+                                    StringUtils.trim(sheet.getRow(sourceTableIndex)
+                                    .getCell(cell + 6).getStringCellValue()).toUpperCase():"";
+                            String sourceColumnComment = sheet.getRow(sourceTableIndex)
+                                    .getCell(cell + 7)!=null ?
+                                    StringUtils.trim(sheet.getRow(sourceTableIndex)
+                                    .getCell(cell + 7).getStringCellValue()).toUpperCase():"";
                             SourceDataNode sourceDataNode = new SourceDataNode(targetTableName, targetTableComment
                                     , targetColumnName, targetColumnComment, sourceTableName
                                     , sourceTableComment, sourceColumnName, sourceColumnComment, storeProcedure);
@@ -345,7 +378,6 @@ public class DataTool {
             if (sourceDataNode.getTargetTableName().equalsIgnoreCase(tableName)
                     && sourceDataNode.getTargetColumnName().equalsIgnoreCase(columnName) && value == 0) {
                 if (treeOfRelation.containTable(tableName)) {
-
                     for (Node node : treeOfRelation.getNodes()) {
                         if (node.getName().equalsIgnoreCase(tableName)) {
                             int index = treeOfRelation.getNodes().indexOf(node);

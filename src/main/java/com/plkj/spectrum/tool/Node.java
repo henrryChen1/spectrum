@@ -5,10 +5,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Node {
-    private String name;
-    private List<Column> colums;
-    private String comment;
-    private String storeProcedure;
+    private String name;//表名
+    private List<Column> colums;//字段数组
+    private String comment;//表注释
+    private String storeProcedure;//依赖存储过程
 
     public String getComment() {
         return comment;
@@ -88,4 +88,8 @@ public class Node {
         return  columnList;
     }
 
+    public Node(String name, List<Column> colums) {
+        this.name = name;
+        this.colums = colums;
+    }
 }
