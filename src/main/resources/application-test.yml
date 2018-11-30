@@ -4,11 +4,11 @@ mybatis.mapper-locations: classpath:mapper/*.xml
 # hive 数据源自定义配置
 spring:
   datasource:
-    url: jdbc:hive2://10.10.10.104:10000/cw
+    url: jdbc:hive2://10.10.10.104:10000/spectrum?useUnicode=true&characterEncoding=utf8
     username: cw
     password: cw
     driver-class-name: org.apache.hive.jdbc.HiveDriver
-
-logging:
-  level:
-    com.plkj.spectrum.dao: debug
+#日志
+#logging:
+#  level:
+#    com.plkj.spectrum.dao: debug
