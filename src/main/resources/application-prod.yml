@@ -9,7 +9,7 @@ spring:
     password: hive
     driver-class-name: org.apache.hive.jdbc.HiveDriver
 
-
-logging:
-  level:
-    com.plkj.spectrum.dao: debug
+#日志
+#logging:
+#  level:
+#    com.plkj.spectrum.dao: debug
