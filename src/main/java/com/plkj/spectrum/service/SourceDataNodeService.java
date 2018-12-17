@@ -52,20 +52,13 @@ public class SourceDataNodeService {
                 for (int i = 0; i < sourceDataNodes.size(); i++) {
                     SourceDataNode sourceDataNode = sourceDataNodes.get(i);
                     sourceDataNode.setTargetTableName(JsonTool.dealString(sourceDataNode.getTargetTableName()));
-                    sourceDataNode.setTargetTableComment(JsonTool.dealString(sourceDataNode.getTargetTableComment()));
-                    sourceDataNode.setTargetColumnName(JsonTool.dealString(sourceDataNode.getTargetColumnName()));
-                    sourceDataNode.setTargetColumnComment(JsonTool.dealString(sourceDataNode.getTargetColumnComment()));
                     sourceDataNode.setSourceTableName(JsonTool.dealString(sourceDataNode.getSourceTableName()));
-                    sourceDataNode.setSourceTableComment(JsonTool.dealString(sourceDataNode.getSourceTableComment()));
-                    sourceDataNode.setSourceColumnName(JsonTool.dealString(sourceDataNode.getSourceColumnName()));
-                    sourceDataNode.setSourceColumnComment(JsonTool.dealString(sourceDataNode.getSourceColumnComment()));
-                    sourceDataNode.setStoreProcedure(JsonTool.dealString(sourceDataNode.getStoreProcedure()));
                 }
                 sourceDataNodeDao.insertData(sourceDataNodes);
                 List<ProcessRelation> processRelationList = DataTool.executeData(sourceDataNodes);
                 processRelationDao.truncateTable();
                 if (processRelationList.size() != 0) {
-                 //    processRelationDao.insertData(processRelationList);
+
                 int end = processRelationList.size();
                     while (end>100){
                         processRelationDao.insertData(processRelationList.subList(end-100,end));

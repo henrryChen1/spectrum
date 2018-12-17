@@ -10,26 +10,19 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.junit.Test;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 /*
-* Change the Excel to Node to insert into hive.
-*
-* */
+ * Change the Excel to Node to insert into hive.
+ *
+ * */
 public class DataTool {
     public static final String SAMPLE_XLSX_FILE_PATH = "/Users/chenwei/Code" +
             "/spectrum/src/main/test1.xlsx";
@@ -49,9 +42,7 @@ public class DataTool {
             TreeOfRelation afterTable = findRelationTable(node.getName(), nodeList,
                     linkList, new TreeOfRelation(), 1);
             ProcessRelation processRelation = new ProcessRelation();
-            processRelation.setStoreProcedure(node.getStoreProcedure());
             processRelation.setTableName(node.getName());
-            processRelation.setComment(node.getComment());
 
             JSONArray columns = new JSONArray();
             columns.addAll(node.buildcolumnsName());
@@ -60,18 +51,16 @@ public class DataTool {
             JSONArray afterTables = new JSONArray();
             afterTables.addAll(afterTable.getTableName());
 
-            processRelation.setColumns(columns.toJSONString().replace("\"", "'")
-                    .replace("\n", "").replace("\r","")
-                    .replace("\t",""));
             processRelation.setSourceTables(soucreTables.toJSONString().replace("\"", "'")
-                    .replace("\n", "").replace("\r","")
-                    .replace("\t",""));
+                    .replace("\n", "").replace("\r", "")
+                    .replace("\t", ""));
             processRelation.setAfterTables(afterTables.toJSONString().replace("\"", "'").
-                    replace("\n", "").replace("\r","")
-                    .replace("\t",""));
+                    replace("\n", "").replace("\r", "")
+                    .replace("\t", ""));
             processRelation.setMapJson(StringUtils.replace(JsonTool.buildJson(sourceTable, afterTable).toJSONString(),
                     "\"", "'").replace("\n", "")
-                    .replace("\r","").replace("\t",""));;
+                    .replace("\r", "").replace("\t", ""));
+            ;
             processRelationList.add(processRelation);
         }
         return processRelationList;
@@ -141,214 +130,41 @@ public class DataTool {
 
         Iterator<Sheet> sheetIterable = workbook.sheetIterator();
 
-        String targetColumnName;
-        String targetColumnComment;
-        String targetTableName;
-        String targetTableComment;
-        String storeProcedure;
-
         List<SourceDataNode> sourceDataNodes = new ArrayList<>();
+
         while (sheetIterable.hasNext()) {
             Sheet sheet = sheetIterable.next();
             Iterator<Row> rowIterator = sheet.rowIterator();
-            List<CellRangeAddress> crs = sheet.getMergedRegions();
-            for (CellRangeAddress cr : crs) {
-                if (cr.getFirstColumn() == 1) {
-                    int lastRow = cr.getLastRow();
-                    int cell = cr.getFirstColumn();
-                    int columnIndex = cr.getFirstRow();//列的Index
-                    int sourceTableIndex = columnIndex; //sourceTable的Index
-
-                    targetTableName = sheet.getRow(columnIndex).getCell(cell)!=null?
-                            StringUtils.trim(sheet.getRow(columnIndex).getCell(cell)
-                            .getStringCellValue()).toUpperCase():"";
-                    targetTableComment = sheet.getRow(columnIndex).getCell(cell + 1)!=null?
-                            StringUtils.trim(sheet.getRow(columnIndex).getCell(cell + 1)
-                            .getStringCellValue()).toUpperCase():"";
-                    storeProcedure = sheet.getRow(columnIndex).getCell(cell + 8)!=null?
-                            StringUtils.trim(sheet.getRow(columnIndex).getCell(cell + 8)
-                            .getStringCellValue()).toUpperCase():"";
-                    while (columnIndex <= lastRow) {
-                        targetColumnName =sheet.getRow(columnIndex).getCell(cell + 2)!=null?
-                                StringUtils.trim(sheet.getRow(columnIndex).getCell(cell + 2)
-                                .getStringCellValue()).toUpperCase():"";
-                        targetColumnComment = sheet.getRow(columnIndex).getCell(cell + 3)!=null?
-                                StringUtils.trim(sheet.getRow(columnIndex).getCell(cell + 3)
-                                .getStringCellValue()).toUpperCase():"";
-                        Result result = isMergedRegion(sheet, columnIndex, cell + 2);
-                        if (result.merged) {
-                            columnIndex = result.endRow + 1;
-                            while (sourceTableIndex <= result.endRow) {
-                                String sourceTableName = sheet.getRow(sourceTableIndex)
-                                        .getCell(cell + 4)!=null?
-                                        StringUtils.trim(sheet.getRow(sourceTableIndex)
-                                        .getCell(cell + 4).getStringCellValue()).toUpperCase():"";
-                                String sourceTableComment = sheet.getRow(sourceTableIndex)
-                                        .getCell(cell + 5)!=null?
-                                        StringUtils.trim(sheet.getRow(sourceTableIndex)
-                                        .getCell(cell + 5).getStringCellValue()).toUpperCase():"";
-                                Result tableResult = isMergedRegion(sheet, sourceTableIndex, cell + 4);
-                                if (tableResult.merged) {
-                                    Result sourceTableResult = isMergedRegion(sheet, sourceTableIndex, cell + 4);
-                                    if (sourceTableResult.merged) {
-                                        while (sourceTableIndex <= sourceTableResult.endRow) {
-                                            String sourceColumnName = sheet.getRow(sourceTableIndex)
-                                                    .getCell(cell + 6)!=null?
-                                                    StringUtils.trim(sheet.getRow(sourceTableIndex)
-                                                    .getCell(cell + 6).getStringCellValue()).toUpperCase():"";
-                                            String sourceColumnComment = sheet.getRow(sourceTableIndex)
-                                                    .getCell(cell + 7)!=null?
-                                                    StringUtils.trim(sheet.getRow(sourceTableIndex)
-                                                    .getCell(cell + 7).getStringCellValue()).toUpperCase():"";
-                                            SourceDataNode sourceDataNode = new SourceDataNode(targetTableName
-                                                    , targetColumnComment, targetColumnName, targetColumnComment
-                                                    , sourceTableName, sourceTableComment, sourceColumnName
-                                                    , sourceColumnComment, storeProcedure);
-                                            if (StringUtils.isNotBlank(sourceDataNode.getTargetTableName())
-                                                    && StringUtils.isNotBlank(sourceDataNode.getSourceColumnName())
-                                                    ) {
-                                                sourceDataNodes.add(sourceDataNode);
-                                            }
-                                            sourceTableIndex++;
-                                        }
-                                    } else {
-                                        String sourceColumnName = sheet.getRow(sourceTableIndex)
-                                                .getCell(cell + 6)!=null?
-                                                StringUtils.trim(sheet.getRow(sourceTableIndex)
-                                                .getCell(cell + 6).getStringCellValue()).toUpperCase():"";
-                                        String sourceColumnComment = sheet.getRow(sourceTableIndex)
-                                                .getCell(cell + 7)!=null?
-                                                StringUtils.trim(sheet.getRow(sourceTableIndex)
-                                                .getCell(cell + 7).getStringCellValue()).toUpperCase():"";
-                                        SourceDataNode sourceDataNode = new SourceDataNode(targetTableName
-                                                , targetTableComment, targetColumnName, targetColumnComment, sourceTableName
-                                                , sourceTableComment, sourceColumnName, sourceColumnComment, storeProcedure);
-                                        if (StringUtils.isNotBlank(sourceDataNode.getTargetTableName())
-                                                && StringUtils.isNotBlank(sourceDataNode.getSourceColumnName())
-                                                ) {
-                                            sourceDataNodes.add(sourceDataNode);
-                                        }
-                                        sourceTableIndex++;
-                                    }
-                                } else {
-                                    String sourceColumnName = sheet.getRow(sourceTableIndex)
-                                            .getCell(cell + 6)!=null?
-                                            StringUtils.trim(sheet.getRow(sourceTableIndex)
-                                            .getCell(cell + 6).getStringCellValue()).toUpperCase():"";
-                                    String sourceColumnComment = sheet.getRow(sourceTableIndex)
-                                            .getCell(cell + 7)!=null?
-                                            StringUtils.trim(sheet.getRow(sourceTableIndex)
-                                            .getCell(cell + 7).getStringCellValue()).toUpperCase():"";
-                                    SourceDataNode sourceDataNode = new SourceDataNode(targetTableName
-                                            , targetTableComment, targetColumnName, targetColumnComment, sourceTableName
-                                            , sourceTableComment, sourceColumnName, sourceColumnComment, storeProcedure);
-                                    if (StringUtils.isNotBlank(sourceDataNode.getTargetTableName())
-                                            && StringUtils.isNotBlank(sourceDataNode.getSourceColumnName())
-                                            ) {
-                                        sourceDataNodes.add(sourceDataNode);
-                                    }
-                                    sourceTableIndex++;
-                                }
-                            }
-
-                        } else {
-                            String sourceTableName = sheet.getRow(sourceTableIndex)
-                                    .getCell(cell + 4)!=null?
-                                    StringUtils.trim(sheet.getRow(sourceTableIndex)
-                                    .getCell(cell + 4).getStringCellValue()).toUpperCase():"";
-                            String sourceTableComment = sheet.getRow(sourceTableIndex)
-                                    .getCell(cell + 5)!=null?
-                                    StringUtils.trim(sheet.getRow(sourceTableIndex)
-                                    .getCell(cell + 5).getStringCellValue()).toUpperCase():"";
-                            String sourceColumnName = sheet.getRow(sourceTableIndex)
-                                    .getCell(cell + 6)!=null?
-                                    StringUtils.trim(sheet.getRow(sourceTableIndex)
-                                    .getCell(cell + 6).getStringCellValue()).toUpperCase():"";
-                            String sourceColumnComment = sheet.getRow(sourceTableIndex)
-                                    .getCell(cell + 7)!=null ?
-                                    StringUtils.trim(sheet.getRow(sourceTableIndex)
-                                    .getCell(cell + 7).getStringCellValue()).toUpperCase():"";
-                            SourceDataNode sourceDataNode = new SourceDataNode(targetTableName, targetTableComment
-                                    , targetColumnName, targetColumnComment, sourceTableName
-                                    , sourceTableComment, sourceColumnName, sourceColumnComment, storeProcedure);
-                            if (StringUtils.isNotBlank(sourceDataNode.getTargetTableName())
-                                    && StringUtils.isNotBlank(sourceDataNode.getSourceColumnName())
-                                    ) {
-                                sourceDataNodes.add(sourceDataNode);
-                            }
-                            columnIndex++;
-                            sourceTableIndex++;
-                        }
-                    }
-                }
+            while (rowIterator.hasNext()) {
+                Row row = rowIterator.next();
+                String targetTableName = row.getCell(1).getStringCellValue();
+                String sourceTableName = row.getCell(2).getStringCellValue();
+                sourceDataNodes.add(new SourceDataNode(targetTableName, sourceTableName));
             }
         }
+
+
         return sourceDataNodes;
-    }
 
-    public static Result isMergedRegion(Sheet sheet, int row, int column) {
-        int sheetMergeCount = sheet.getNumMergedRegions();
-        for (int i = 0; i < sheetMergeCount; i++) {
-            CellRangeAddress range = sheet.getMergedRegion(i);
-            int firstColumn = range.getFirstColumn();
-            int lastColumn = range.getLastColumn();
-            int firstRow = range.getFirstRow();
-            int lastRow = range.getLastRow();
-            if (row >= firstRow && row <= lastRow) {
-                if (column >= firstColumn && column <= lastColumn) {
-                    return new Result(true, firstRow, lastRow, firstColumn, lastColumn);
-                }
-            }
-        }
-        return new Result(false, 0, 0, 0, 0);
-    }
 
+    }
 
     public static List<ProcessRelation> executeData(List<SourceDataNode> sourceDataNodeList)
             throws IOException, InvalidFormatException {
-        Map<String, Node> nodeMap = new HashMap<>();
+        List<Node> nodeList = new ArrayList<>();
         List<Link> linkList = new LinkedList<>();
         for (SourceDataNode sourceDataNode : sourceDataNodeList) {
-            if (StringUtils.isNotBlank(sourceDataNode.getTargetColumnName()) &&
-                    StringUtils.isNotBlank(sourceDataNode.getTargetTableName())) {
-                if (nodeMap.containsKey(sourceDataNode.getTargetTableName())) {
-                    Node node = nodeMap.get(sourceDataNode.getTargetTableName());
-                    node.addColumn(new Column(sourceDataNode.getTargetColumnName(), sourceDataNode.getTargetColumnComment()));
-                    nodeMap.replace(sourceDataNode.getTargetTableName(), node);
-                } else {
-                    Node node = new Node(sourceDataNode.getTargetTableName(), null, sourceDataNode.getTargetTableComment()
-                            , sourceDataNode.getStoreProcedure());
-                    node.addColumn(new Column(sourceDataNode.getTargetColumnName(), sourceDataNode.getTargetColumnComment()));
-                    nodeMap.put(sourceDataNode.getTargetTableName(), node);
-                }
-            }
-            if (StringUtils.isNotBlank(sourceDataNode.getSourceColumnName()) &&
-                    StringUtils.isNotBlank(sourceDataNode.getSourceTableName())) {
-                if (nodeMap.containsKey(sourceDataNode.getSourceTableName())) {
-                    Node node = nodeMap.get(sourceDataNode.getSourceTableName());
-                    node.addColumn(new Column(sourceDataNode.getSourceColumnName(), sourceDataNode.getSourceColumnComment()));
-                    nodeMap.replace(sourceDataNode.getSourceTableName(), node);
-                } else {
-                    Node node = new Node(sourceDataNode.getSourceTableName(), null, sourceDataNode.getSourceTableComment()
-                            , "");
-                    node.addColumn(new Column(sourceDataNode.getSourceColumnName(), sourceDataNode.getSourceColumnComment()));
-                    nodeMap.put(sourceDataNode.getSourceTableName(), node);
-                }
-            }
-            if (StringUtils.isNotBlank(sourceDataNode.getTargetColumnName()) &&
-                    StringUtils.isNotBlank(sourceDataNode.getTargetTableName()) &&
-                    StringUtils.isNotBlank(sourceDataNode.getSourceColumnName()) &&
-                    StringUtils.isNotBlank(sourceDataNode.getSourceTableName())) {
-                linkList.add(new Link(0, sourceDataNode.getSourceTableName(), sourceDataNode.getTargetTableName()
-                        , sourceDataNode.getSourceColumnName(), sourceDataNode.getTargetColumnName()));
+            nodeList.add(new Node(sourceDataNode.getSourceTableName()));
+            nodeList.add(new Node(sourceDataNode.getTargetTableName()));
+            linkList.add(new Link(1, sourceDataNode.getTargetTableName(), sourceDataNode.getSourceTableName()));
+        }
+        List<Node> resultNodeList = new ArrayList<>();
+        List<Link> resultLinkList = new ArrayList<>();
+        for(Node node:nodeList){
+            if(!resultLinkList.contains(node)){
+                re
             }
         }
-
-
-        List<Node> nodeList = new ArrayList();
-        nodeList.addAll(nodeMap.values());
-        List<ProcessRelation> processRelationList = getProcessRelationList(nodeList, linkList);
-        return processRelationList;
     }
 
     public static ProcessRelation findRelationColumn(String tableName, String columnName, ProcessRelation processRelation,
