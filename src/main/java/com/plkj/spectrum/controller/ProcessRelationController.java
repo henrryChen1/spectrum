@@ -42,20 +42,20 @@ public class ProcessRelationController {
     @RequestMapping(value = "/fuzzyQuery",method = RequestMethod.GET)
     @ApiOperation("根据表名进行模糊查询 返回表名列表")
     @ApiImplicitParam(name = "tableName",value = "表名关键字",dataType = "String")
-    public JSONArray fuzzyQuery(String tableName, HttpServletResponse response) {
+    public JSONArray fuzzyQuery(String tableName) {
         return service.queryByFuzzyName(tableName);
     }
     //根据指定的表返回详细信息
     @RequestMapping(value = "/relationQuery",method = RequestMethod.GET)
     @ApiOperation("根据指定的表返回详细信息")
     @ApiImplicitParam(name = "tableName",value = "精确表名",dataType = "String")
-    public JSONObject relationQuery(String tableName, HttpServletResponse response){
+    public JSONObject relationQuery(String tableName){
         return  service.queryByName(tableName);
     }
     //重新计算数据
     @RequestMapping(value = "/executeData",method = RequestMethod.GET)
     @ApiOperation("重新计算数据")
-    public JSONObject  executeDate(HttpServletResponse response) {
+    public JSONObject  executeDate() {
         JSONObject object =sourceDataNodeService.executeData();
         return  object;
     }
@@ -66,14 +66,14 @@ public class ProcessRelationController {
             @ApiImplicitParam(name = "tableName",value = "精确表名",dataType = "String"),
             @ApiImplicitParam(name = "columnName",value = "精确字段名",dataType = "String")
     })
-    public  JSONObject columnQuery(String tableName, String columnName,HttpServletResponse response){
+    public  JSONObject columnQuery(String tableName, String columnName){
         return  service.queryByTableAndColumnName(tableName,columnName);
     }
     //上传Excel
     @RequestMapping(value = "uploadexcel",method = RequestMethod.POST)
     @ApiOperation("上传Excel生成数据")
     @ApiImplicitParam(name = "file",value = "excel文件名",dataType = "MultipartFile")
-    public JSONObject uploadexcel(@RequestPart("file") MultipartFile file, HttpServletResponse response){
+    public JSONObject uploadexcel(@RequestPart("file") MultipartFile file){
         JSONObject object =sourceDataNodeService.insertExcel(file);
         return  object;
     }
