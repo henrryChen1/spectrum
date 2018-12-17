@@ -3,13 +3,13 @@ package com.plkj.spectrum.tool;
 import java.util.List;
 
 public class Link {
-    private int source;
-    private int target;
-    private int value;
-    private String souceTable;
-    private String targetTable;
-    private String sourceColumn;
-    private String targetColumn;
+    private int source;//来源表在数组列表中的index
+    private int target;//影响表在数组中的index
+    private int value;//方向0代表从来源指向影响  1代表从影响指向来源
+    private String souceTable;//来源表名
+    private String targetTable;//目标表明
+    private String sourceColumn;//来源字段
+    private String targetColumn;//目标字段
 
 
     @Override

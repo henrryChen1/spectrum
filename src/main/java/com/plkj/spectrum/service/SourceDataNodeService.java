@@ -28,7 +28,12 @@ public class SourceDataNodeService {
             List<ProcessRelation> processRelationList = DataTool.executeData(sourceDataNodes);
             processRelationDao.truncateTable();
             if (processRelationList.size() != 0) {
-                processRelationDao.insertData(processRelationList);
+                int end = processRelationList.size();
+                while (end>100){
+                    processRelationDao.insertData(processRelationList.subList(end-100,end));
+                    end-=100;
+                }
+                processRelationDao.insertData(processRelationList.subList(0,end));
             }
             object.put("message", "success");
         } catch (Exception e) {
@@ -60,7 +65,14 @@ public class SourceDataNodeService {
                 List<ProcessRelation> processRelationList = DataTool.executeData(sourceDataNodes);
                 processRelationDao.truncateTable();
                 if (processRelationList.size() != 0) {
-                    processRelationDao.insertData(processRelationList);
+                 //    processRelationDao.insertData(processRelationList);
+                int end = processRelationList.size();
+                    while (end>100){
+                        processRelationDao.insertData(processRelationList.subList(end-100,end));
+                        end-=100;
+                    }
+                    processRelationDao.insertData(processRelationList.subList(0,end));
+
                 }
                 object.put("message", "success");
             }
