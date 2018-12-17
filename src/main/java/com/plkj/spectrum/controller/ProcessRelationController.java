@@ -29,6 +29,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/ProcessRelation")
 @Api("血缘关系")
+@CrossOrigin
 public class ProcessRelationController {
 
 

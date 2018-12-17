@@ -1,3 +1,3 @@
 spring:
   profiles:
-    active: prod   # 选择加载文件application-{test}.yml
+    active: test   # 选择加载文件application-{test}.yml
